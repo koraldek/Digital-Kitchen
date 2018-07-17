@@ -1,0 +1,76 @@
+<html xmlns:th="http://www.springframework.org/schema/jdbc">
+<head>
+    <meta charset="UTF-8"/>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+</head>
+<body>
+<h2>Digital Kitchen - test</h2>
+
+<div>
+
+    <div>
+        <span> Wyszukiwarka jedzenia</span>
+        <input title="Wpisz nazwe jedzenia" type="text" id="searchInput" value="">
+
+    </div>
+</div>
+
+<div>
+    <img src="/images/egg.png"/>
+</div>
+
+
+<script>
+    $(document).ready(function() {
+        $('#searchInput').autocomplete({
+            minLength: 2,
+            delay:400,
+            source: function(request, response) {
+                $.ajax({
+                    type: "GET",
+                    url: '/food/autocomplete',
+                    dataType:'json',
+                    data: { keyword:  $('#searchInput').val()},
+                    cache: true,
+                    success: function( data ) {
+                       console.log('Response from server:' +  JSON.stringify(data));
+                        // response(
+                        //     $.map( data, function( item ) {
+                        //     return {
+                        //         data: item.foodID,
+                        //         value: item.name
+                        //     }
+                        // }));
+                        response(data)
+                    },
+                    error: function (error) {
+                        alert('error in autocomplete: ' + error.text);
+                    }
+
+                });
+            },
+            focus: updateTextBox,
+            select: updateTextBox
+
+        }).autocomplete('instance')._renderItem = function (ul, item) {
+            return $('<li>')
+                .append("<img class='imageClass' src=" + item.photo + " alt=" + item.name + "/>")
+                .append('<a th:href="@{/food/detailed/  " href="">' + item.name + '</a>')
+                .appendTo(ul); };
+
+        function updateTextBox(event, ui) {
+            $(this).val(ui.item.Name);
+            return false;
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

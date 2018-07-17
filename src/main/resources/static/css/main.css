@@ -1,0 +1,22 @@
+.autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+.autocomplete-suggestion { padding: 5px 5px; white-space: nowrap; overflow: hidden; font-size:22px}
+.autocomplete-selected { background: #ede3c0; }
+.autocomplete-suggestions strong { font-weight: bold; color: #046e16; }
+
+.ui-autocomplete {
+    max-height: 100px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    z-index: 1001; !important
+}
+/* IE 6 doesn't support max-height
+ * we use height instead, but this forces the menu to always be this tall
+ */
+* html .ui-autocomplete {
+    height: 100px;
+}
+
+ .imageClass {
+  width: 16px; height: 16px; padding-right: 3px;
+  }
