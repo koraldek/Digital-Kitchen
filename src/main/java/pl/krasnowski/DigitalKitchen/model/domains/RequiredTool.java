@@ -1,6 +1,7 @@
 package pl.krasnowski.DigitalKitchen.model.domains;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Data
 @ToString
+@EqualsAndHashCode
 public class RequiredTool {
 
 	@Id

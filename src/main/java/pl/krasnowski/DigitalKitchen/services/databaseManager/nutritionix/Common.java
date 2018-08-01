@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,7 +20,7 @@ import java.util.List;
         "serving_weight_grams",
         "locale"
 })
-class Common {
+class Common implements IFood {
 
     @JsonProperty("food_name")
     String foodName;
@@ -51,5 +52,37 @@ class Common {
                 ", servingWeightGrams=" + servingWeightGrams +
                 ", locale='" + locale + '\'' +
                 '}';
+    }
+
+    @Override
+    public String getName() {
+        return foodName;
+    }
+
+    @Override
+    public String getPhoto() {
+        return photo.thumb;
+    }
+
+    @Override
+    public int getServingGramsWeight() {
+        return servingWeightGrams;
+    }
+
+    @Override
+    public List<AltMeasure> getAltMeasures() {
+        ArrayList<AltMeasure> measures = new ArrayList<AltMeasure>();
+        measures.add(new AltMeasure(servingQty, servingUnit));
+        return measures;
+    }
+
+    @Override
+    public List<FullNutrient> getFullNutrients() {
+        return fullNutrients;
+    }
+
+    @Override
+    public String getFoodID() {
+        return foodName;
     }
 }

@@ -1,14 +1,15 @@
 package pl.krasnowski.DigitalKitchen.model.domains;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.*;
 
 @Data
 @ToString
 @Entity
+@EqualsAndHashCode
 public class KitchensTool {
 
 	@Id

@@ -1,5 +1,6 @@
 package pl.krasnowski.DigitalKitchen.model.domains;
 
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -10,21 +11,16 @@ import javax.persistence.*;
 @Data
 @ToString
 @EqualsAndHashCode
-public class Ingredient {
+public class RecipeInstruction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
-    private long ingredientID;
+    private long instructionID;
 
     @Column
-    private int quantity;
+    int number;
 
     @Column
-    @Enumerated
-    private Unit unit;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Food food;
-
+    String description;
 }

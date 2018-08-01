@@ -50,3 +50,5 @@ buildNumber.properties
 /src/main/resources/extdb_keys.properties
 # test package
 /src/main/java/pl/krasnowski/DigitalKitchen/test/
+/src/test/java/pl/krasnowski/DigitalKitchen/tests_only_local/
+/src/test/java/pl/krasnowski/DigitalKitchen/controller/

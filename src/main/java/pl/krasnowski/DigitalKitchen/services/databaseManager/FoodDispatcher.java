@@ -1,6 +1,5 @@
 package pl.krasnowski.DigitalKitchen.services.databaseManager;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.krasnowski.DigitalKitchen.model.domains.ApiRestriction;
@@ -11,6 +10,7 @@ import pl.krasnowski.DigitalKitchen.services.databaseManager.nutritionix.Nutriti
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 interface FoodDispatcher {
 
@@ -21,26 +21,28 @@ interface FoodDispatcher {
      * @param keyword
      * @param paramMap
      */
-    static ArrayList<FoodProxy> getAutocompleteFoodList(String keyword, Map<String, String> paramMap, ApiRestriction apiRestriction) throws UnirestException {
-        log.debug("Running with parameters: \n keyword:{}\n paramMap:{}", keyword, paramMap);
-
+    static ArrayList<FoodProxy> getAutocompleteFoodList(String keyword, Map<String, String> paramMap, Set<ApiRestriction> apiRestrictions) {
+        // choose database which fits best with current user API restrictions
+        log.debug("Running database manager with parameters: \n keyword:{}\n paramMap:{}", keyword, paramMap);
         return NutritionixManager.getAutocompleteFoodList(keyword, paramMap);
     }
 
-
     /**
-     * @param barcode
+     * @param keyword
+     * @param paramMap
      */
-    static Food getFoodByBarcode(int barcode) {
-        throw new UnsupportedOperationException();
+    static ArrayList<Food> getFoodList(String keyword, Map<String, String> paramMap, Set<ApiRestriction> apiRestrictions) {
+        // choose database which fits best with current user API restrictions
+        log.debug("Running Database manager to find food with keyword:{}", keyword, paramMap);
+        return NutritionixManager.getFoodList(keyword, paramMap);
     }
 
     /**
      * @param foodID
      * @param dbName
      */
-    static Food getFoodByID(String foodID, String dbName, Map<String, String> paramMap) throws IllegalArgumentException, UnirestException {
-        log.debug("Running Database manager to food with ID:{}. Choosed database:{}, parameters:{}", foodID, dbName, paramMap);
+    static Food getFoodByID(String foodID, String dbName, Map<String, String> paramMap) {
+        log.debug("Running Database manager to find food with ID:{}. Choosed database:{}, parameters:{}", foodID, dbName, paramMap);
 
         switch (dbName) {
             case LocalDatabaseManager.LOCAL_DB_NAME: {
@@ -58,13 +60,11 @@ interface FoodDispatcher {
     }
 
     /**
-     * @param keyword
-     * @param paramMap
+     * @param barcode
      */
-    static ArrayList<Food> getFoodList(String keyword, Map<String, String> paramMap, ApiRestriction apiRestriction) throws UnirestException {
-        log.debug("Running Database manager to food with keyword:{}, parameters:{}", keyword, paramMap);
-
-        return NutritionixManager.getFoodList(keyword, paramMap);
+    static Food getFoodByBarcode(int barcode) {
+        throw new UnsupportedOperationException();
     }
+
 
 }

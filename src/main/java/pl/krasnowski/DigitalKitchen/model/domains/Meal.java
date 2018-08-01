@@ -1,16 +1,17 @@
 package pl.krasnowski.DigitalKitchen.model.domains;
 
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Data
 @Entity
 @ToString
+@EqualsAndHashCode
 public class Meal {
 
     @Id

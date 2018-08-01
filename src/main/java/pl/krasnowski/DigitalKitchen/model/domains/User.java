@@ -1,6 +1,7 @@
 package pl.krasnowski.DigitalKitchen.model.domains;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
@@ -14,6 +15,7 @@ import java.util.Set;
 @Entity
 @Data
 @ToString
+@EqualsAndHashCode
 public class User {
 
     @Id
@@ -39,6 +41,9 @@ public class User {
 
     @Column
     private int active, nutritionix_id, age, height, weight;
+
+    @Column
+    private int actualKcal;
 
     @Column
     private String language;

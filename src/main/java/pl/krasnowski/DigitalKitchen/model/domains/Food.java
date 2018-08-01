@@ -14,7 +14,7 @@ import java.util.Set;
 @ToString
 @Data
 @EqualsAndHashCode
-public class Food  {
+public class Food {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -90,4 +90,7 @@ public class Food  {
         nutrients.put(nutrient, value);
     }
 
+    public String getForeignID(String dbName) {
+        return foreignIDs.get(dbName);
+    }
 }

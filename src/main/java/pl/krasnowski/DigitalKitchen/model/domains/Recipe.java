@@ -1,14 +1,17 @@
 package pl.krasnowski.DigitalKitchen.model.domains;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @ToString
 @Data
+@EqualsAndHashCode
 public class Recipe {
 
     @Id
@@ -35,9 +38,10 @@ public class Recipe {
      * Estimated prepare time in minutes.
      */
     @Column
-    private int PrepareTime,totalTime,servings;
+    private int PrepareTime, totalTime, servings;
 
-    @Column
-    private String Instruction;
+    @OneToMany
+    @OrderBy("number")
+    private List<RecipeInstruction> Instructions;
 
 }

@@ -1,10 +1,13 @@
 package pl.krasnowski.DigitalKitchen.model.domains;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.Map;
 
 @Entity
+@EqualsAndHashCode
 public class Nutrient {
 
     @Id
@@ -12,15 +15,15 @@ public class Nutrient {
     private long nutrient_id;
 
 
-    @ElementCollection // this is a collection of primitives
-    @MapKeyColumn(name = "dbName") // column nick for map "key"
-    @Column(name = "dbTag") // column nick for map "value"
+    @ElementCollection
+    @MapKeyColumn(name = "dbName") // column map "key"
+    @Column(name = "dbTag") // column map "value"
     private Map<String, String> dbTags;
     @Column
     private String usda_tag, name, notes;
 
     @Column
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private Unit unit;
 
     public Nutrient(HashMap<String, String> dbTags, String usda_tag, String name, Unit unit, String notes) {

@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,7 +26,7 @@ public class Kitchen {
     @Column
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "kitchen_fk_shoppingList")
-    private List<ShoppingListItem> shoppingList;
+    private Set<ShoppingListItem> shoppingList;
 
     @Column
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -1,80 +1,52 @@
 package pl.krasnowski.DigitalKitchen.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mashape.unirest.http.ObjectMapper;
+import com.mashape.unirest.http.Unirest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.web.context.WebApplicationContext;
 import pl.krasnowski.DigitalKitchen.model.domains.Nutrient;
 import pl.krasnowski.DigitalKitchen.model.domains.Unit;
-import pl.krasnowski.DigitalKitchen.model.domains.User;
-import pl.krasnowski.DigitalKitchen.services.databaseManager.DatabaseManager;
-import pl.krasnowski.DigitalKitchen.services.databaseManager.DatabaseManagerImpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+import java.util.TimeZone;
 
 @Configuration
 public class AppConfig {
     private static final Logger log = LoggerFactory.getLogger(AppConfig.class);
-
-    public static HashMap<String, String> dummyParamMap = new HashMap<String, String>();
+    private static final String extdb_keys_path = "src/main/resources/extdb_keys.properties";
 
     AppConfig() {
+        InitializeObjectMapper();
         TimeZone.setDefault(TimeZone.getTimeZone("TimeZone"));
-        dummyParamMap.put("x-remote-user-id", "0"); // for developing purpose only
     }
 
-
-    /*
-    Session beans
-     */
-    @Bean
-    @Scope(
-            value = WebApplicationContext.SCOPE_SESSION,
-            proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public User user() {
-        return new User();
-    }
 
     @Bean
-//    @Scope( // TODO: zmienic na zasieg sesyjny
-//            value = WebApplicationContext.SCOPE_SESSION,
-//            proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public DatabaseManager databaseManager() {
-        return new DatabaseManagerImpl();
-    }
-
-
-    /*
-    Configuration
-     */
-    private static Map<String, String> nutritionixKeys = new HashMap<>(3);
-
-    public static Map<String, String> getNutritionixKeys() {
-        if (nutritionixKeys.isEmpty()) {
-            nutritionixKeys = new HashMap<>();
-            try (Scanner scanner = new Scanner(new File("src/main/resources/extdb_keys.properties"))) {
-
-                while (scanner.hasNext()) {
-                    String line = scanner.nextLine();
-                    if (line.contains("x-app-id"))
-                        nutritionixKeys.put("x-app-id", line.split("=")[1]);
-                    if (line.contains("x-app-key"))
-                        nutritionixKeys.put("x-app-key", line.split("=")[1]);
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                log.error("Could not read extdb_keys.properties.");
+    public static HashMap<String, String> nutritionixKeys() {
+        HashMap<String, String> nutritionixKeys = new HashMap<>(2);
+        try (Scanner scanner = new Scanner(new File(extdb_keys_path))) {
+            while (scanner.hasNext()) {
+                String line = scanner.nextLine();
+                if (line.contains("x-app-id"))
+                    nutritionixKeys.put("x-app-id", line.split("=")[1]);
+                if (line.contains("x-app-key"))
+                    nutritionixKeys.put("x-app-key", line.split("=")[1]);
             }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            log.error("Could not read extdb_keys.properties.");
         }
+        if (nutritionixKeys.isEmpty())
+            log.error("Can't read API keys from file:" + extdb_keys_path);
+
         return nutritionixKeys;
     }
 
@@ -531,5 +503,27 @@ public class AppConfig {
 
     public static ArrayList<Nutrient> getNutrientsList() {
         return nutrientList;
+    }
+
+    private void InitializeObjectMapper() {
+        Unirest.setObjectMapper(new ObjectMapper() {
+            private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper = new com.fasterxml.jackson.databind.ObjectMapper();
+
+            public <T> T readValue(String value, Class<T> valueType) {
+                try {
+                    return jacksonObjectMapper.readValue(value, valueType);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            public String writeValue(Object value) {
+                try {
+                    return jacksonObjectMapper.writeValueAsString(value);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 }

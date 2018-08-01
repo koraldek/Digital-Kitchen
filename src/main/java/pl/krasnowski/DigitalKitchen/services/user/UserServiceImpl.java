@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 
-@Service("userService")
+@Service
 public class UserServiceImpl implements UserService {
 
 
@@ -36,12 +36,10 @@ public class UserServiceImpl implements UserService {
         Role userRole = roleDAO.findByroleName("ADMIN");
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        user.setRoles(new HashSet<>(Arrays.asList(userRole)));
         user.setActive(1);
         user.setIntolerances(
-                new HashSet<Intolerance>() {
-                    private static final long serialVersionUID = -9132687044006606279L;
-
+                new HashSet<>() {
                     {
                         add(Intolerance.dairy);
                         add(Intolerance.none);
@@ -50,11 +48,7 @@ public class UserServiceImpl implements UserService {
                     }
                 }
         );
-
         userDAO.save(user);
-
-        user.toString();
-
     }
 
 }

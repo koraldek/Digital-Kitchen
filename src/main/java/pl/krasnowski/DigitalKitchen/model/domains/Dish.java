@@ -1,6 +1,7 @@
 package pl.krasnowski.DigitalKitchen.model.domains;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @ToString
+@EqualsAndHashCode
 public class Dish {
 
     @Id
@@ -23,6 +25,6 @@ public class Dish {
     private Recipe recipe;
 
     @Column
-    private double servingQuantity = 1;
+    private double servingQuantity;
 
 }

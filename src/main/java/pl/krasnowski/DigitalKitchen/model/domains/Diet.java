@@ -1,6 +1,7 @@
 package pl.krasnowski.DigitalKitchen.model.domains;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -9,24 +10,19 @@ import java.util.*;
 @Entity
 @Data
 @ToString
+@EqualsAndHashCode
 public class Diet {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column
-	private long diet_id=0;
+	private long diet_id;
 
 	@Column
 	private String dietName;
 
 	@Column
-	private int dailyCalories = 0;
-
-	@Column
-	private int dailyProteins;
-
-	@Column
-	private int dailyFat;
+	private int dailyKCal,dailyCarbohydrates,dailyProteins,dailyFat;
 
 
 	@JoinTable(

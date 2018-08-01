@@ -1,5 +1,6 @@
 package pl.krasnowski.DigitalKitchen.model.domains;
 
+
 public enum Origin {
 	ANIMAL("animal"),
 	VEGETABLE("vegetable"),

@@ -4,9 +4,12 @@ package pl.krasnowski.DigitalKitchen.services.databaseManager.nutritionix;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "food_name",
@@ -24,7 +27,7 @@ import java.util.List;
         "brand_type",
         "locale"
 })
-class Branded {
+class Branded implements IFood {
 
     @JsonProperty("food_name")
     String foodName;
@@ -56,4 +59,33 @@ class Branded {
     String locale;
 
 
+    @Override
+    public String getName() {
+        return foodName;
+    }
+
+    @Override
+    public String getPhoto() {
+        return photo.thumb;
+    }
+
+    @Override
+    public int getServingGramsWeight() {
+        return servingWeightGrams;
+    }
+
+    @Override
+    public List<AltMeasure> getAltMeasures() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<FullNutrient> getFullNutrients() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String getFoodID() {
+        return nixItemId;
+    }
 }

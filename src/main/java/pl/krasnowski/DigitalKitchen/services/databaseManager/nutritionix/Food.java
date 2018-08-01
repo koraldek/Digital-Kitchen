@@ -39,7 +39,7 @@ import java.util.List;
         "updated_at",
         "nf_ingredient_statement"
 })
-class Food {
+class Food implements IFood {
     @JsonProperty("food_name")
     String foodName;
     @JsonProperty("brand_name")
@@ -98,4 +98,34 @@ class Food {
     String updatedAt;
     @JsonProperty("nf_ingredient_statement")
     Object nfIngredientStatement;
+
+    @Override
+    public String getName() {
+        return foodName;
+    }
+
+    @Override
+    public String getPhoto() {
+        return photo.thumb;
+    }
+
+    @Override
+    public int getServingGramsWeight() {
+        return servingWeightGrams;
+    }
+
+    @Override
+    public List<AltMeasure> getAltMeasures() {
+        return altMeasures;
+    }
+
+    @Override
+    public List<FullNutrient> getFullNutrients() {
+        return fullNutrients;
+    }
+
+    @Override
+    public String getFoodID() {
+        return foodName;
+    }
 }

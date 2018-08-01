@@ -1,6 +1,7 @@
 package pl.krasnowski.DigitalKitchen.model.domains;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @ToString
+@EqualsAndHashCode
 public class Product {
 
     @Id
@@ -20,7 +22,7 @@ public class Product {
     private Product parent;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private Food food;
+    private Food base;
 
 
     /**

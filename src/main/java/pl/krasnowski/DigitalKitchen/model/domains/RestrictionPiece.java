@@ -10,21 +10,12 @@ import javax.persistence.*;
 @Data
 @ToString
 @EqualsAndHashCode
-public class Ingredient {
+public class RestrictionPiece {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
-    private long ingredientID;
-
+    private int restrictionPieceID;
     @Column
-    private int quantity;
-
-    @Column
-    @Enumerated
-    private Unit unit;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Food food;
-
+    private int period, current, max;
 }
