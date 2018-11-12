@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Current Diet</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css" th:href="@{/css/main.css}">
+
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+
+    <script th:inline="javascript" type="text/javascript">
+        function colorScale(perc) {
+            var r, g, b = 0;
+            if (perc < 50) {
+                r = 255;
+                g = Math.round(5.1 * perc);
+            }
+            else {
+                g = 255;
+                r = Math.round(510 - 5.10 * perc);
+            }
+            var h = r * 0x10000 + g * 0x100 + b * 0x1;
+            return '#' + ('000000' + h.toString(16)).slice(-6);
+        }
+
+        window.onload = function() {
+            // Show BMI
+            let bmi_result_text, scale;
+            /*[CDATA][*/
+            const defBMI = (60/1.8)/1.8;
+            const bmi = /*[[${bmi}]]*/ defBMI;
+            /*]]>*/
+            scale = Math.abs(21.7 - bmi)*12.5; // adjust color scale
+            if(scale > 100)
+                scale = 100;
+            scale = 100-scale;
+
+            if(bmi < 18.5)
+                bmi_result_text = 'underweight';
+            else if(bmi > 24.99)
+              bmi_result_text = 'overweight';
+            else
+                bmi_result_text = 'normal';
+
+            document.getElementById("bmi").innerHTML= 'Your BMI is:' + Math.round(bmi*100)/100 + ' This is considered as:' + bmi_result_text;
+            document.getElementById("bmi").style.color=colorScale(scale);
+
+            // Print chart
+            $("#chartContainer").CanvasJSChart({
+                title: {
+                    text: "nutrients overview",
+                    fontSize: 20
+                },
+                axisY: {
+                    title: "Overview chart of diet"
+                },
+                legend :{
+                    verticalAlign: "center",
+                    horizontalAlign: "right"
+                },
+                data: [
+                    {
+                        type: "pie",
+                        showInLegend: true,
+                        toolTipContent: "{label} <br/> {y} Kcal consumed each day",
+                        indexLabel: "{y} Kcal",
+                        dataPoints: [
+                            /*[CDATA][*/
+                            { label: "carbohydrates",  y:  /*[[${diet.carbohydrates}]]*/ 30.3, legendText: "carbohydrates"},
+                            { label: "fat",    y:  /*[[${diet.fat}]]*/ 38.7, legendText: "fat"  },
+                            { label: "proteins",   y:  /*[[${diet.proteins}]]*/ 22.0,  legendText: "proteins" }
+                            /*]]>*/
+                        ]
+                    }
+                ]
+            });
+        }
+    </script>
+
+    <style type="text/css">
+        #options{
+            color: #ffffff;
+        }
+        #contact-dietetic{
+            float:left;
+        }
+
+        #diet-info {
+            display:inline-block;
+            color:red;
+        }
+        #change-diet{
+            /*float:right;*/
+        }
+
+        h2{
+            font-size:15px;
+            text-align:center;
+            float:left;
+        }
+        #bmi {
+            font-size: 40px;
+            text-align: right;
+        }
+        #create-diet {
+            float:right;
+        }
+
+        #long-tile {
+
+        }
+    </style>
+
+
+
+</head>
+<body style="background-image: url(/img/background.jpg); min-height:100%;">
+<header th:replace="layout :: site-header" ></header>
+<div id="long-tile" style="width: 100%">
+    <div id="options">
+        <a id="contact-dietetic" href="/src/main/resources/templates/homepage.html" th:href="@{/}">
+            <button>Contact dietetic</button>
+        </a>
+        <h2 th:text="${'Current diet: ' + diet.getDietName()}">Current diet: Bodybuilder's diet </h2>
+
+        <div id="change-diet">
+            <form  action="#" th:action="@{/api/diets(diet_id=dietID}" method="GET">
+                <label >
+                    Change diet:
+                    <select onchange="this.form.submit()" name="dietID"
+                            th:value="${diet.dietID}" th:remove="all-but-first">
+                        <option th:each="d : ${dietList}"
+                                th:value="${d.dietID}" th:text="${d.DietName}">Bodybuilder's diet
+                        </option>
+                        <option>My first diet</option>
+                    </select>
+                </label>
+            </form>
+
+            <a id="create-diet" href="create_diet.html" th:href="@{/}"> <input type="button" value="Create new"> </a>
+        </div>
+
+    </div>
+
+<div id="container">
+    <div id="diet-info">
+        <div id="diet-summary">
+            <div id="chartContainer" style="width: auto; height: 250px"></div>
+            <!--<div th:text="${diet.toString()}"></div>-->
+            <div id="bmi">BMI result</div>
+        </div>
+        <div id="diet-details">
+
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+<footer th:replace="layout :: site-footer" ></footer>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css" th:href="@{/css/main.css}">
+
+    <title>Edit your profile</title>
+</head>
+
+<style type="text/css">
+    body{
+        font-size:17px;
+    }
+    h2 {
+        text-align: center;
+    }
+
+    #edit-frame {
+        width: auto;
+        text-align: center;
+        background-color: rgb(194, 200, 212);
+        opacity: 0.6%;
+        margin: 0 auto;
+    }
+
+    label {
+        display: inline-block;
+        width: 140px;
+        text-align: right;
+    }
+    #select-sex {
+     text-align: center;
+   //     background-color: #46d260;
+        width:300px;
+   //     margin-top: 10px;
+     display: inline-block;
+    }
+
+    .sex-cell {
+        width:60px;
+        display:inline-block;
+        text-align: left;
+
+    }
+
+
+</style>
+<body style="background-image: url(/img/background.jpg); min-height:100%;">
+<header th:replace="layout :: site-header"></header>
+
+
+<form id="edit-frame" th:action="@{/personalization/update}" th:object="${usr}" method="post" action="#">
+    <h2>Profile edition</h2>
+
+    <input type="hidden" th:field="*{userID}" th:value="*{userID}"/>
+    <label>Visible name:</label>
+    <input style="text-align: center" type="text" th:field="*{visibleName}" th:value="${usr.visibleName}" value="John"/>
+    <br>
+
+    <label>Email:</label>
+    <input style="text-align: center" type="text" th:field="*{email}" th:value="${usr.email}" value="email@gmail.com"/>
+    <br>
+
+    <!--<div id="select-sex">-->
+        <!--<div class="sex-cell">Genre:</div>-->
+        <!--<div class="sex-cell" th:each="sx : ${T(pl.krasnowski.DigitalKitchen.model.domainSex).values()}">-->
+            <!--<label style="width:60px"  th:text="${sx.toString()}">-->
+                <!--<input type="radio" name="radio-sex" th:value="${sx}" th:field="*{sex}">-->
+                <!--Male-->
+            <!--</label>-->
+        <!--</div>-->
+        <!--<div style="text-align: left" class="sex-cell" th:remove="all">-->
+            <!--<label style="width:100px">-->
+                <!--<input type="radio" name="radio-sex">-->
+                <!--Female-->
+            <!--</label>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<br>-->
+
+    <label>Sex:</label>
+    <select th:field="*{sex}" th:value="usr.sex" th:remove="all-but-first">
+        <option th:each="sx : ${T(pl.krasnowski.DigitalKitchen.model.domain.user.Sex).values()}"
+                th:value="${sx}" th:text="${sx.toString()}">Male
+        </option>
+        <option>Female</option>
+    </select>
+
+    <br>
+    <label>Weight:</label>
+    <input style="text-align: center" type="text" th:field="*{weight}" th:value="${usr.weight}" value="77"/>
+
+    <br>
+    <label>Height::</label>
+    <input style="text-align: center" type="text" th:field="*{height}" th:value="${usr.height}" value="175"/>
+
+    <br>
+    <label>Body type:</label>
+    <select th:field="*{bodyType}" th:value="usr.bodyType" th:remove="all-but-first">
+        <option th:each="bType : ${T(pl.krasnowski.DigitalKitchen.model.domain.user.BodyType).values()}"
+                th:value="${bType}" th:text="${bType.toString()}">Ectomomorph
+        </option>
+        <option>Mesomorph</option>
+    </select>
+    <br>
+
+    <label>Age:</label>
+    <input type="text" th:field="*{age}" th:value="${usr.age}" size="1" value="19"/>
+    <br>
+
+    <input type="submit"  value="Confirm">
+</form>
+
+
+<div th:replace="layout :: site-footer"></div>
+
+</body>
+</html>

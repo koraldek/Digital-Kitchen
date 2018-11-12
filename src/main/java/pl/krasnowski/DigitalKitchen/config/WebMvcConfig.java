@@ -1,50 +1,33 @@
 package pl.krasnowski.DigitalKitchen.config;
 
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
-import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.CommonAnnotationBeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-import pl.krasnowski.DigitalKitchen.model.domains.User;
-import pl.krasnowski.DigitalKitchen.services.databaseManager.DatabaseManager;
-import pl.krasnowski.DigitalKitchen.services.databaseManager.DatabaseManagerImpl;
+import pl.krasnowski.DigitalKitchen.model.domain.user.User;
 
 import java.util.Locale;
 
 @Configuration
-@EnableCaching
+//@EnableCaching
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    /*
-Session beans
- */
+
     @Bean
-    @Scope(
-            value = WebApplicationContext.SCOPE_SESSION,
-            proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public User user() {
+    @SessionScope
+    User user() {
         return new User();
     }
 
     @Bean
-//    @Scope(
-//            value = WebApplicationContext.SCOPE_SESSION,
-//            proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public DatabaseManager databaseManager() {
-        return new DatabaseManagerImpl();
+    CommonAnnotationBeanPostProcessor commonAnnotationBeanPostProcessor() {
+        return new CommonAnnotationBeanPostProcessor();
     }
-
 
     // Locale and internationalization beans
     @Bean
@@ -66,29 +49,22 @@ Session beans
         registry.addInterceptor(localeChangeInterceptor());
     }
 
-
-    /*
-    CACHE BEANS
-     */
-    @Bean
-    public CacheManager cacheManager() {
-        return new EhCacheCacheManager(ehCacheCacheManager().getObject());
-    }
-
-    @Bean
-    public EhCacheManagerFactoryBean ehCacheCacheManager() {
-        EhCacheManagerFactoryBean cmfb = new EhCacheManagerFactoryBean();
-        cmfb.setConfigLocation(new ClassPathResource("ehcache.xml"));
-        cmfb.setShared(true);
-
-        return cmfb;
-    }
-
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    /*
+//    CACHE BEANS
+//     */
+//    @Bean
+//    public CacheManager cacheManager() {
+//        return new EhCacheCacheManager(ehCacheCacheManager().getObject());
+//    }
+//
+//    @Bean
+//    public EhCacheManagerFactoryBean ehCacheCacheManager() {
+//        EhCacheManagerFactoryBean cmfb = new EhCacheManagerFactoryBean();
+//        cmfb.setConfigLocation(new ClassPathResource("ehcache.xml"));
+//        cmfb.setShared(true);
+//
+//        return cmfb;
+//    }
 
 
 }

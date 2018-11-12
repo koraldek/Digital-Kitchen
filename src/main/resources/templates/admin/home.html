@@ -10,6 +10,13 @@
 <script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
+<style>
+	th
+	{
+		padding: 5px;
+	}
+</style>
+
 <body>
 	<div class="container">
 	
@@ -29,7 +36,46 @@
 				<p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
 			</div>
 		</div>
-		
+
+
+
+		<div id="test">
+			<form th:action="@{/user/getDetails}" method="get">
+				<button class="btn btn-md btn-danger btn-block"  type="Submit">Check Api restriction</button>
+			</form>
+			<!--<div id="User-details" th:text="${@user.toString()}"></div>-->
+
+
+            <table>
+                <caption>User information</caption>
+                <tr>
+                    <th>Username</th>
+                    <th>email</th>
+                    <th>Height</th>
+                    <th>Weight</th>
+                    <!--<th>ApiRestrictions</th>-->
+                    <!--<th>Intolerance's</th>-->
+                </tr>
+                <tr>
+                    <th th:text="${@user.username}">Username</th>
+                    <th th:text="${@user.email}">email</th>
+                    <th th:text="${@user.height}">Height</th>
+                    <th th:text="${@user.weight}">Weight</th>
+                    <!--<th th:text="${@user.apiRestrictions.toString()}">ApiRestrictions</th>-->
+                    <!--<th th:text="${@user.intolerances}">Intolerance's</th>-->
+                </tr>
+            </table>
+
+            <div th:if="${isRestrictionReached}">
+                <span th:text="${isRestrictionReached}"></span>
+            </div>
+
+
+
+			<form th:action="@{/user/edit">
+
+			</form>
+		</div>
 	</div>
 </body>
 </html>
