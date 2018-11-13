@@ -1,19 +1,16 @@
-<html xmlns:th="http://www.springframework.org/schema/jdbc">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>Welcome to Digital Kitchen</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/main.css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css" th:href="@{/css/main.css}">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 </head>
 
-<body style="background-image: url(/img/background.jpg); min-height:100%;">
+
+<body>
 
 <header th:replace="layout :: site-header" ></header>
-
-<div>
-
-</div>
 
 <script>
     $(document).ready(function() {

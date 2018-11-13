@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org ">
+<head th:fragment="site-head">
+    <meta charset="UTF-8"/>
+
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css" th:href="@{/css/main.css}">
+
+    <script src="../static/js/jquery-3.3.1.min.js" th:href="@{/js/jquery-3.3.1.min.js}"></script>
+    <script src="../static/js/jquery-ui.min.js" th:href="@{/js/jquery-ui.min.js}"></script>
+    <link rel="icon" href="../static/img/egg.jpg" th:href="@{/img/egg.jpg}"/>
+
+
+
+    <meta th:include="this :: head" th:remove="tag"/>
+</head>
+
+<body>
+<header th:fragment="site-header">
+
+    <a href="mainPage.html" th:href="@{/}"><img style="width:140px;height:80px;" src="../static/img/fruits.png" th:src="@{/img/fruits.png}"/></a>
+    <a href="mainPage.html" th:href="@{/}">Home</a>
+
+    <span th:if="${@user != null }">
+        <span> Find food</span>
+        <input title="Wpisz nazwe jedzenia" type="text" id="searchInput" value="">
+    </span>
+    <a href="login.html" th:href="@{/login}" th:if="${@user == null || @user.getUsername() == null}" >Login</a>
+    <a href="registration.html" th:href="@{/registration} " th:if="${@user == null || @user.getUsername() == null}">Register</a>
+
+    <div id="logged-in-info" th:if="${@user != null }">
+        <div th:if="${@user.getUsername() != null }">
+            <span th:text="${'Hello, ' + @user.getVisibleName()}">Hello, stranger!</span>
+            <a href="update-profile.html" th:href="@{/personalization/update}">Edit profile</a>
+            <a href="diet/current.html" th:href="@{/api/diets/current}">My diet</a>
+            <form method="POST" th:action="@{/logout}">
+                <input type="submit" value="Logout"/>
+            </form>
+        </div>
+    </div>
+</header>
+
+
+<h1>Welcome</h1>
+<p>Welcome to the Digital Kitchen system.</p>
+
+<h2 th:if="${param.expired}" th:text="${'Session has been expired.'}"></h2>
+
+<footer style="position:absolute; bottom:0; width:100%;" th:fragment="site-footer">
+
+    &copy; Digital kitchen - universal food managing system, 2018
+</footer>
+</body>
+</html>

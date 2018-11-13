@@ -46,6 +46,7 @@ class DietController {
         mav.addObject("diet", dietManager.getCurrentDiet());
         mav.addObject("dietList", dietManager.getDiets());
         mav.addObject("bmi", dietUtilities.calculateBMI(uService.getCurrentUser().getWeight(), uService.getCurrentUser().getHeight()));
+        mav.addObject("dietDays", dietManager.getCurrentDiet().getDietDays());
         mav.setViewName("diet/current");
 
         return mav;

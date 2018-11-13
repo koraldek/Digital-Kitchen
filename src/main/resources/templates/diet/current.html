@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Current Diet</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/main.css" th:href="@{/css/main.css}">
 
     <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="../../static/css/main.css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" type="text/css" href="../../static/css/diet/current.css" th:href="@{/css/diet/current.css}">
+    <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <!--<link rel="stylesheet" type="text/css" href="../../static/css/diet/current.css">-->
     <script th:inline="javascript" type="text/javascript">
         function colorScale(perc) {
             var r, g, b = 0;
@@ -38,12 +41,12 @@
             if(bmi < 18.5)
                 bmi_result_text = 'underweight';
             else if(bmi > 24.99)
-              bmi_result_text = 'overweight';
+                bmi_result_text = 'overweight';
             else
                 bmi_result_text = 'normal';
 
-            document.getElementById("bmi").innerHTML= 'Your BMI is:' + Math.round(bmi*100)/100 + ' This is considered as:' + bmi_result_text;
-            document.getElementById("bmi").style.color=colorScale(scale);
+            // document.getElementById("bmi").innerHTML= 'Your BMI is:' + Math.round(bmi*100)/100 + ' This is considered as:' + bmi_result_text;
+            // document.getElementById("bmi").style.color=colorScale(scale);
 
             // Print chart
             $("#chartContainer").CanvasJSChart({
@@ -77,87 +80,157 @@
         }
     </script>
 
-    <style type="text/css">
-        #options{
-            color: #ffffff;
-        }
-        #contact-dietetic{
-            float:left;
-        }
-
-        #diet-info {
-            display:inline-block;
-            color:red;
-        }
-        #change-diet{
-            /*float:right;*/
-        }
-
-        h2{
-            font-size:15px;
-            text-align:center;
-            float:left;
-        }
-        #bmi {
-            font-size: 40px;
-            text-align: right;
-        }
-        #create-diet {
-            float:right;
-        }
-
-        #long-tile {
-
-        }
-    </style>
-
-
-
 </head>
-<body style="background-image: url(/img/background.jpg); min-height:100%;">
+<body>
 <header th:replace="layout :: site-header" ></header>
-<div id="long-tile" style="width: 100%">
-    <div id="options">
-        <a id="contact-dietetic" href="/src/main/resources/templates/homepage.html" th:href="@{/}">
-            <button>Contact dietetic</button>
-        </a>
-        <h2 th:text="${'Current diet: ' + diet.getDietName()}">Current diet: Bodybuilder's diet </h2>
 
-        <div id="change-diet">
-            <form  action="#" th:action="@{/api/diets(diet_id=dietID}" method="GET">
-                <label >
-                    Change diet:
-                    <select onchange="this.form.submit()" name="dietID"
-                            th:value="${diet.dietID}" th:remove="all-but-first">
-                        <option th:each="d : ${dietList}"
-                                th:value="${d.dietID}" th:text="${d.DietName}">Bodybuilder's diet
-                        </option>
-                        <option>My first diet</option>
-                    </select>
-                </label>
-            </form>
+<main>
 
-            <a id="create-diet" href="create_diet.html" th:href="@{/}"> <input type="button" value="Create new"> </a>
+    <nav class="navbar navbar-dark bg-jumpers navbar-expand-md">
+
+
+        <button class="navbar-toggler float-right" type="button" data-toggle="collapse" data-target="#mainmenu"
+                aria-controls="mainmenu" aria-expanded="false" aria-label="Navigation switch">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainmenu">
+
+            <ul class="navbar-nav mr-auto">
+
+                <li class="nav-item px-2" >
+                    <a id="contact-dietetic" href="/Digital-Kitchen/src/main/resources/templates/homepage.html" th:href="@{/}">
+                        <button class="btn-dark">Contact dietetic</button>
+                    </a>
+                </li>
+
+                <li class="nav-item px-2">
+                    <div >
+                        <a id="create-diet" href="create_diet.html" th:href="@{/}">
+                            <input class="btn-dark"  type="button" value="Create new"> </a>
+                    </div>
+                </li>
+
+
+
+                <li class="nav-item">
+                    <form class="form-inline" id="change-diet" action="#" th:action="@{/api/diets(diet_id=dietID}" method="GET">
+                        <label >
+                            Change diet:
+                            <select onchange="this.form.submit()" name="dietID"
+                                    th:value="${diet.dietID}" th:remove="all-but-first">
+                                <option th:each="d : ${dietList}"
+                                        th:value="${d.dietID}" th:text="${d.DietName}">Bodybuilder's diet
+                                </option>
+                                <option>My first diet</option>
+                            </select>
+                        </label>
+                    </form>
+                </li>
+
+            </ul>
         </div>
-
-    </div>
-
-<div id="container">
-    <div id="diet-info">
-        <div id="diet-summary">
-            <div id="chartContainer" style="width: auto; height: 250px"></div>
-            <!--<div th:text="${diet.toString()}"></div>-->
-            <div id="bmi">BMI result</div>
-        </div>
-        <div id="diet-details">
-
-        </div>
-    </div>
-</div>
+    </nav>
 
 
-</div>
+    <section id="main">
+    </section>
 
+        <div class="container">
+
+            <header>
+                <h3 th:text="${'Current diet: ' + diet.getDietName()}">Current diet: Bodybuilder's diet </h3>
+            </header>
+
+            <div class="row">
+
+                        <div id= "diet-summary" class="row col-md-6">
+                            <p> Diet summary:</p>
+
+                            <div id="chartContainer" class="col-8" style="height: 250px"></div>
+                        </div>
+
+
+
+                <div id="diet-days" class="row col-sm-10 col-md-9" >
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>name</th>
+                            <th>calories to gain</th>
+                            <th>carbohydrates</th>
+                            <th>proteins</th>
+                            <th>fat</th>
+                            <th>workouts</th>
+                            <th>meals</th>
+                        </tr>
+                        </thead>
+                        <tbody th:remove="all-but-first">
+                        <tr class="col-sm-6 col-lg-3" th:each="dd : ${dietDays}">
+                            <td th:text="${dd.dayName}">Monday</td>
+                            <td th:text="${dd.kCalGained}">1850</td>
+                            <td th:text="${dd.carbohydrates}">1050</td>
+                            <td th:text="${dd.proteins}">650</td>
+                            <td th:text="${dd.fat}">100</td>
+                            <td>workouts details</td>
+                            <td>meals details</td>
+                        </tr>
+                        <tr class="col-sm-6 col-lg-3" >
+                            <td>Tuesday</td>
+                            <td>1850</td>
+                            <td>1050</td>
+                            <td>650</td>
+                            <td>100</td>
+                        </tr>
+                        <tr class="col-sm-6 col-lg-3" >
+                            <td>Wednesday</td>
+                            <td>1850</td>
+                            <td>1050</td>
+                            <td>650</td>
+                            <td>100</td>
+                        </tr>
+                        <tr class="col-sm-6 col-lg-3" >
+                            <td>Thursday</td>
+                            <td>1850</td>
+                            <td>1050</td>
+                            <td>650</td>
+                            <td>100</td>
+                        </tr>
+                        <tr class="col-sm-6 col-lg-3" >
+                            <td>Friday</td>
+                            <td>1850</td>
+                            <td>1050</td>
+                            <td>650</td>
+                            <td>100</td>
+                        </tr>
+                        <tr class="col-sm-6 col-lg-3">
+                            <td>Saturday</td>
+                            <td>1850</td>
+                            <td>1050</td>
+                            <td>650</td>
+                            <td>100</td>
+                        </tr>
+                        <tr class="col-sm-6 col-lg-3">
+                            <td>Sunday</td>
+                            <td>1850</td>
+                            <td>1050</td>
+                            <td>650</td>
+                            <td>100</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                </div>
+            </div>
+
+
+
+</main>
 <footer th:replace="layout :: site-footer" ></footer>
+
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="../../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>
