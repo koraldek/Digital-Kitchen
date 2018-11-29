@@ -21,7 +21,7 @@ public interface DietUtilities {
      *
      * @return diet for desired silhouette for current user.
      */
-    Diet computeDiet(DietType dietType);
+    Diet computeDiet(DietType dietType, int physicalActivity);
 
 
     /**

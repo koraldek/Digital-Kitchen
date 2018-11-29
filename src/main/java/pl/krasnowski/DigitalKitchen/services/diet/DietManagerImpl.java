@@ -45,7 +45,7 @@ public class DietManagerImpl implements DietManager {
 
     @Override
     public Diet initializeDiet() {
-        Diet nDiet = dietUtilities.computeDiet(DietType.balanced);
+        Diet nDiet = dietUtilities.computeDiet(DietType.balanced, 50);
         nDiet.setDietName(userService.getCurrentUser().getVisibleName() + defaultDietSuffix);
         nDiet.setDietDays(this.initializeDietDays());
         nDiet.setAuthor(userService.getCurrentUser());

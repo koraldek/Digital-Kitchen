@@ -1,8 +1,8 @@
 package pl.krasnowski.DigitalKitchen.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.CommonAnnotationBeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -24,17 +24,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return new User();
     }
 
-    @Bean
-    CommonAnnotationBeanPostProcessor commonAnnotationBeanPostProcessor() {
-        return new CommonAnnotationBeanPostProcessor();
-    }
 
-    // Locale and internationalization beans
     @Bean
     public LocaleResolver localeResolver() {
-        SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
-        sessionLocaleResolver.setDefaultLocale(Locale.ENGLISH);
-        return sessionLocaleResolver;
+        SessionLocaleResolver slr = new SessionLocaleResolver();
+        slr.setDefaultLocale(Locale.ENGLISH);
+        return slr;
     }
 
     @Bean
@@ -48,6 +43,14 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
     }
+
+//    @Bean
+//    ResourceBundleMessageSource resourceBundleMessageSource() {
+//        ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
+//        resourceBundleMessageSource.addBasenames("i18n/");
+//        return resourceBundleMessageSource;
+
+//    }
 
 //    /*
 //    CACHE BEANS
@@ -65,6 +68,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
 //
 //        return cmfb;
 //    }
-
-
 }

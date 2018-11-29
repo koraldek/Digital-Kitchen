@@ -25,16 +25,16 @@ public class DietUtilitiesImpl implements DietUtilities {
 
     /**
      * Implementation of Basal Metabolic Rate (BMR) calculator, Harris-Benedict's method
-     *
+     * @param physicalActivity percentages of user physical activity during week
      * @return calculated diet, without planned meals.
      */
     @Override
-    public Diet computeDiet(DietType dietType) {
+    public Diet computeDiet(DietType dietType, int physicalActivity) {
         Diet calculatedDiet = new Diet();
         calculatedDiet.setDietType(dietType);
         double BMR, CPM, dailyKcal;
 
-        CPM = 1.2 + 0.01 * 50; // 50 - percentages of user physical activity during week
+        CPM = 1.2 + 0.01 * physicalActivity;
 
         if (user.getSex().equals(Sex.female)) {
             BMR = 655

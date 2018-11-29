@@ -3,74 +3,73 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Registration Form</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/main.css" th:href="@{/css/main.css}">
-    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}" />
+    <link rel="stylesheet" type="text/css" href="../static/css/main.css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-<header th:replace="layout :: site-header" ></header>
+<header th:replace="layout :: site-header"></header>
 
 <form th:action="@{/login}" method="get">
-    <button class="btn btn-md btn-warning btn-block" type="Submit">Go To Login Page</button>
+    <button class="btn btn-md btn-warning btn-block" type="Submit" th:text="#{to-login-page}">Go To Login Page</button>
 </form>
 
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <form autocomplete="off" action="#" th:action="@{/registration}"
-                  th:object="${user}" method="post" class="form-horizontal"
+                  th:object="${user}" method="post"
                   role="form">
-                <h2>Registration Form</h2>
-                <div class="form-group">
-                    <div class="col-sm-9">
-                        <label th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
-                               class="validation-message"></label>
-                        <input type="text" th:field="*{username}" placeholder="Username"
-                               class="form-control" />
-                    </div>
+                <h2 class="col-sm-9" th:text="#{creating-account}">Creating new account</h2>
+
+                <div class="form-group col-sm-9">
+                    <label th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                           class="validation-message"></label>
+                    <input type="text" th:field="*{username}" placeholder="Username"
+                           th:placeholder="#{username.placeholder}"
+                           autocomplete="username" class="form-control"/>
                 </div>
 
-                <div class="form-group">
-                    <div class="col-sm-9">
-                        <label	th:if="${#fields.hasErrors('visibleName')}" th:errors="*{visibleName}"
-                                  class="validation-message"></label>
-                        <input type="text" th:field="*{visibleName}"
-                               placeholder="Visible name" class="form-control" />
-                    </div>
+                <div class="form-group col-sm-9">
+                    <label th:if="${#fields.hasErrors('visibleName')}" th:errors="*{visibleName}"
+                           class="validation-message"></label>
+                    <input type="text" th:field="*{visibleName}"
+                           placeholder="Visible name" th:placeholder="#{visible-name.placeholder}"
+                           class="form-control"/>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-9">
-                        <input type="text" th:field="*{email}" placeholder="Email"
-                               class="form-control" /> <label
+
+                <div class="form-group col-sm-9 ">
+                    <label
                             th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
-                            class="validation-message"></label>
-                    </div>
+                            class="validation-message">
+                    </label>
+                    <input type="text" th:field="*{email}" placeholder="Email" th:placeholder="#{email.placeholder}"
+                           autocomplete="email" class="form-control"/>
                 </div>
-                <div class="form-group">
-                    <div class="col-sm-9">
-                        <input type="password" th:field="*{password}"
-                               placeholder="Password" class="form-control" /> <label
+
+                <div class="form-group col-sm-9">
+                    <label
                             th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
-                            class="validation-message"></label>
-                    </div>
+                            class="validation-message">
+                    </label>
+                    <input type="password" th:field="*{password}"
+                           placeholder="Password" th:placeholder="#{password.placeholder}" autocomplete="new-password"
+                           class="form-control"/>
+
                 </div>
 
-                <div class="form-group">
-                    <div class="col-sm-9">
-                        <button type="submit" class="btn btn-primary btn-block">Register User</button>
-                    </div>
+                <div class="col-sm-9 form-group">
+                    <button type="submit" class="btn btn-primary btn-block" th:text="#{register-submit}">Register User
+                    </button>
                 </div>
-
-                <span th:utext="${successMessage}"></span>
-
 
             </form>
         </div>
     </div>
 </div>
 
-<footer th:replace="layout :: site-footer" ></footer>
+<footer th:replace="layout :: site-footer"></footer>
 </body>
 </html>

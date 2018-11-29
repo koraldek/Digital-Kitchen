@@ -59,3 +59,12 @@ body>footer {
     display: inline-block;
     margin-right: 10px;
 }
+#locales {
+    display: inline-block;
+    float:right;
+
+}
+.test {
+    display:inline-block;
+    color: #00b3ee;
+}

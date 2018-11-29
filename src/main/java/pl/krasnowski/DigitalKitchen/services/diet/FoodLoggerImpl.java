@@ -69,7 +69,6 @@ public class FoodLoggerImpl implements FoodLogger {
 
     }
 
-
     @Override
     public void removeFromLog(Meal meal) {
 
