@@ -24,47 +24,138 @@
 
 
  body {
-     background-image: url(../img/background.jpg);
+     background-image: url(../img/layout/background.jpg);
      min-height: 100%;
      background-size:cover;
-
  }
 
-body>header {
-    background: #eee;
-    padding: 5px;
-    height:110px;
+footer {
+    color: white;
+    position: absolute;
+    bottom:0;
+    width:100%;
 }
 
-body>header>a>img, body>header a {
+
+.menu-icon:hover {
+    background-color: #6e916e;
+}
+
+.menu-icon {
     display: inline-block;
-    vertical-align: middle;
-    padding: 0px 5px;
-    font-size: 1.2em;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    align-content:center;
 }
 
-body>footer {
-    background: #eee;
-    padding: 5px;
-    margin: 10px 0;
+.menu-icon>img{
+    width:40px;
+    height: 40px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
+    align-content:center;
+}
+.navbar-brand:hover {
+    background-color: #6e916e;
+}
+
+
+
+#profile-picture {
+    border:1px solid #000000;
+    padding:1px;
 }
 
 #logged-in-info {
     float: right;
-    margin-top: 18px;
+    margin-top:  18px;
 }
 
 #logged-in-info form {
     display: inline-block;
     margin-right: 10px;
 }
-#locales {
+.locales {
     display: inline-block;
     float:right;
+    margin-top:  18px;
+}
+
+ .menu-icon:hover {
+     background-color: #6e916e;
+ }
+
+.menu-icon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    align-content:center;
 
 }
-.test {
-    display:inline-block;
-    color: #00b3ee;
+.menu-icon>img{
+    width:40px;
+    height: 40px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    align-content:center;
+}
+.navbar-brand:hover {
+    background-color: #6e916e;
+}
+
+#profile-picture {
+    border:1px solid #000000;
+    padding:1px;
+}
+
+
+
+
+/* LANGUAGE PICKER*/
+.languagepicker {
+    background-color: #FFF;
+    display: inline-block;
+    padding: 0;
+    height: 40px;
+    overflow: hidden;
+    transition: all .3s ease;
+    margin: 0 50px 10px 0;
+    vertical-align: top;
+    float: left;
+}
+
+.languagepicker:hover {
+    /* don't forget the 1px border */
+    /*height: 81px;*/
+}
+
+.languagepicker a{
+    color: #000;
+    text-decoration: none;
+}
+
+.languagepicker li {
+    display: block;
+    padding: 0px 20px;
+    line-height: 40px;
+    border-top: 1px solid #EEE;
+}
+
+.languagepicker li:hover{
+    background-color: #EEE;
+}
+
+.languagepicker a:first-child li {
+    border: none;
+    background: #FFF !important;
+}
+
+.languagepicker li img {
+    margin-right: 5px;
 }

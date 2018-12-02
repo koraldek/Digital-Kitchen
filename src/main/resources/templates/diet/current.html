@@ -82,7 +82,11 @@
 
 </head>
 <body>
-<header th:replace="layout :: site-header" ></header>
+<header th:replace="${@user.username != null} ?
+                      ~{fragments/layout       :: site-header} :
+                      ~{fragments/layout-guest :: site-header
+                     }">
+</header>
 
 <main>
 
@@ -106,7 +110,7 @@
 
                 <li class="nav-item px-2">
                     <div >
-                        <a id="create-diet" href="create_diet.html" th:href="@{/}">
+                        <a id="create-diet" href="create-diet.html" th:href="@{/}">
                             <input class="btn-dark"  type="button" value="Create new"> </a>
                     </div>
                 </li>

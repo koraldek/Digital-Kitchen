@@ -2,7 +2,7 @@
 INSERT IGNORE INTO role VALUE (1,'ADMIN');
 INSERT IGNORE INTO role VALUE (2,'USER');
 
-INSERT IGNORE INTO `user` VALUES ('2', '1', '32', '2018-09-16 08:00:00', '1', '1', '1', 'digitalkitchenadmin@gmail.com', '180', 'en', '0', 'pazz', '+48500300200','0' , '1', 'Admin', 'Digital Kitchen Administrator', '80', NULL);
+INSERT IGNORE INTO `user` VALUES ('2', '1', '32', '2018-09-16 08:00:00', '1', '1', '1', 'digitalkitchenadmin@gmail.com', '180', 'en', '0', 'pazz', '+48500300200','0' , '1', 'Admin', 'Digital Kitchen Administrator', '80', NULL, NULL);
 
 /*  Session tables*/
 CREATE TABLE IF NOT EXISTS  SPRING_SESSION (

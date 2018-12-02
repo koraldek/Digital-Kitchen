@@ -145,6 +145,10 @@ public class User implements Serializable {
                   Community and user own data
  **********************************************************************************************************
      */
+
+
+    String photo;
+
     @JoinTable(
             name = "user_friends",
             joinColumns = {@JoinColumn(name = "userID")},

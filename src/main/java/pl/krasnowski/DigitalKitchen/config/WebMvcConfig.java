@@ -2,13 +2,13 @@ package pl.krasnowski.DigitalKitchen.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.context.annotation.SessionScope;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import pl.krasnowski.DigitalKitchen.model.domain.kitchen.Kitchen;
 import pl.krasnowski.DigitalKitchen.model.domain.user.User;
 
 import java.util.Locale;
@@ -22,6 +22,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @SessionScope
     User user() {
         return new User();
+    }
+
+    @Bean
+    Kitchen guestDummyKitchen() {
+        Kitchen dummyKitchen = new Kitchen();
+        dummyKitchen.setName("dummy guest Kitchen name");
+        return dummyKitchen;
+    }
+
+    @Bean
+    Kitchen loggedDummyKitchen() {
+        Kitchen dummyKitchen = new Kitchen();
+        dummyKitchen.setName("Logged user Kitchen name");
+        return dummyKitchen;
     }
 
 
@@ -44,13 +58,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(localeChangeInterceptor());
     }
 
-//    @Bean
-//    ResourceBundleMessageSource resourceBundleMessageSource() {
-//        ResourceBundleMessageSource resourceBundleMessageSource = new ResourceBundleMessageSource();
-//        resourceBundleMessageSource.addBasenames("i18n/");
-//        return resourceBundleMessageSource;
-
-//    }
 
 //    /*
 //    CACHE BEANS

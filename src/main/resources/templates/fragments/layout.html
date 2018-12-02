@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org ">
+<head th:fragment="site-head">
+    <meta charset="UTF-8"/>
+</head>
+
+<body>
+<header th:fragment="site-header">
+
+    <nav class="navbar navbar-dark bg-success navbar-expand-lg">
+        <a class="navbar-brand" href="../homepage.html" th:href="@{/}" th:text="#{digital-kitchen}">
+            <img src="../../static/img/layout/fruits.png" th:src="@{/img/layout/fruits.png}" width="60"
+                 class="d-inline-block align-bottom" alt="brand">
+            <span th:text="#{digital-kitchen}">Digital Kitchen</span>
+        </a>
+
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-menu"
+                aria-controls="mainmenu" aria-expanded="false" aria-label="Navigation switch">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="main-menu">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link menu-icon" href="../homepage.html" th:href="@{/}">
+                        <img src="../../static/img/layout/dark-theme/homepage.png"
+                             th:src="@{/img/layout/dark-theme/homepage.png}">
+                        <span th:text="#{homepage}"> Homepage</span>
+                    </a>
+                </li>
+
+
+                <li class="nav-item">
+                    <a class="nav-link menu-icon" href="../my-profile.html" th:href="@{todo...}">
+                        <img class="nav-link" id="profile-picture" src="../../static/img/default-profile-female.png"
+                             th:src="${@user.sex != null &&
+                         @user.sex == T(pl.krasnowski.DigitalKitchen.model.domain.user.Sex).male ?
+                         '/img/default-profile-male.png' : '/img/default-profile-female.png'}">
+                        <span th:text="${@user.username == null ? 'Maria' : @user.username}">Anna</span>
+                    </a>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-icon" href="kitchen.html" th:href="@{/kitchen}">
+                        <img src="../../static/img/layout/dark-theme/kitchen.png"
+                             th:src="@{/img/layout/dark-theme/kitchen.png}">
+                        <span th:text="#{my-kitchen}">Kitchen</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-icon" href="../workout.html" th:href="@{/workout}">
+                        <img src="../../static/img/layout/dark-theme/workout.png"
+                             th:src="@{/img/layout/dark-theme/workout.png}">
+                        <span th:text="#{workout}">Workout</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-icon" href="../diet/current.html" th:href="@{/diet/}">
+                        <img src="../../static/img/layout/dark-theme/diet.png"
+                             th:src="@{/img/layout/dark-theme/diet.png}">
+                        <span th:text="#{diet}">Diet</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-icon" href="../messages.html" th:href="@{/messages}">
+                        <img src="../../static/img/layout/dark-theme/message.png"
+                             th:src="@{/img/layout/dark-theme/message.png}">
+                        <span th:text="#{messages}">Messages</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-icon" href="../notifications.html" th:href="@{/notifications}">
+                        <img src="../../static/img/layout/dark-theme/notification.png"
+                             th:src="@{/img/layout/dark-theme/notification.png}">
+                        <span th:text="#{notifications}">Notifications</span>
+                    </a>
+                </li>
+
+                <li class="nav-item" id="tools-button">
+                    <a class="nav-link menu-icon" href="../tools.html" th:href="@{/tools}">
+                        <img src="../../static/img/layout/dark-theme/tools.png"
+                             th:src="@{/img/layout/dark-theme/tools.png}">
+                        <span th:text="#{tools}">Tools</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link menu-icon" href="../settings.html" th:href="@{/settings}">
+                        <img src="../../static/img/layout/dark-theme/settings.png"
+                             th:src="@{/img/layout/dark-theme/settings.png}">
+                        <span th:text="#{settings}">Settings</span>
+                    </a>
+                </li>
+
+                <li class="nav-item " id="contact-button">
+                    <a class="nav-link menu-icon" href="../contact.html" th:href="@{/contact}">
+                        <img src="../../static/img/layout/dark-theme/contact.png"
+                             th:src="@{/img/layout/dark-theme/contact.png}">
+                        <span th:text="#{contact}">Contact</span>
+                    </a>
+                </li>
+            </ul>
+
+            <!--Right side of navbar-->
+            <ul class="nav navbar-nav mr-auto navbar-right">
+                <li class="nav-item menu-icon" th:if="${@user != null && @user.getUsername() != null}">
+                        <select class="btn bg-warning menu-icon locales">
+                            <option th:text="${param.lang} ? ${param.lang} : 'language'">EN</option>
+                            <option value="EN">English</option>
+                            <option value="PL">Polski</option>
+                        </select>
+                </li>
+
+                <li class="nav-item menu-icon" id="logged-in-info" th:if="${@user != null && @user.getUsername() != null }">
+                    <form method="POST" th:action="@{/logout}">
+                        <input class="bg-warning menu-icon btn" type="submit" th:value="#{logout}" value="Logout"/>
+                    </form>
+                </li>
+                <li class="nav-item menu-icon" th:unless="${@user != null && @user.getUsername() != null }">
+                    <a href="../login.html" th:href="@{/login}" style="color:inherit; text-decoration: none; margin: 2px">
+                        <span class="btn bg-warning menu-icon locales" th:text="#{login}" >Log in</span>
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+    </nav>
+</header>
+
+
+<h1>Welcome</h1>
+<p>Welcome to the Digital Kitchen system.</p>
+
+
+<footer class="bg-success m-lg-1" style="text-align: center" th:fragment="site-footer" th:text="'&copy; ' + #{footer-content}">
+    &copy; Digital kitchen - universal food managing system, 2018
+</footer>
+
+
+    <div th:fragment="imports">
+        <link rel="stylesheet" type="text/css" href="../../static/css/main.css" th:href="@{/css/main.css}">
+        <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap.min.css"
+              th:href="@{/css/bootstrap.min.css}">
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+                integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+                crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../static/js/jquery-3.3.1.min.js"
+                th:src="@{/js/jquery-3.3.1.min.js}"></script>
+        <script type="text/javascript" src="../../static/js/jquery-ui.min.js" th:src="@{/js/jquery-ui.min.js}"></script>
+        <script type="text/javascript" src="../../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+        <script type="text/javascript" src="../../static/js/main.js" th:src="@{/js/main.js}"></script>
+    </div>
+
+</body>
+</html>

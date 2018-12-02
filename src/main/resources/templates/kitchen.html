@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org ">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{my-kitchen}">My kitchen</title>
+
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+
+</head>
+<body>
+<header th:replace="${@user.username != null} ?
+                      ~{fragments/layout       :: site-header} :
+                      ~{fragments/layout-guest :: site-header
+                     }">
+</header>
+
+<div th:replace="${@user.username != null} ?
+                      ~{fragments/kitchen :: container (${@loggedDummyKitchen})} :
+                      ~{fragments/kitchen :: container (${@guestDummyKitchen})}">
+
+    Content of Kitchen template
+</div>
+
+
+</body>
+
+
+<div th:replace="fragments/layout :: imports"></div>
+</html>
