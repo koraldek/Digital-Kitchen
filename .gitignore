@@ -47,8 +47,10 @@ buildNumber.properties
 
 # Custom
 *.txt
+
 /src/main/resources/extdb_keys.properties
 # test package
+/src/main/resources/templates/test
 /src/main/java/pl/krasnowski/DigitalKitchen/test/
 /src/test/java/pl/krasnowski/DigitalKitchen/tests_only_local/
 /src/test/java/pl/krasnowski/DigitalKitchen/controller/

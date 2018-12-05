@@ -7,7 +7,7 @@ import pl.krasnowski.DigitalKitchen.model.domain.user.UserDTO;
 @Repository
 public interface CustomizedUserDAO {
 
-    void updateUser(UserDTO user);
+    void updateUserDTO(UserDTO user);
 
     void updateUser(User user);
 }

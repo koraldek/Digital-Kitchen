@@ -1,9 +1,9 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <title>Welcome to Digital Kitchen</title>
     <link rel="icon" href="../static/img/favicon.jpg" th:href="@{/img/favicon.jpg}"/>
-
+    <link rel="stylesheet" type="text/css" href="../static/css/homepage.css" th:href="@{/css/homepage.css}">
 </head>
 <div th:replace="fragments/layout :: imports"></div>
 
@@ -14,8 +14,106 @@
                      }">
     Unprocessed main page
 </header>
-<p> This is content of page</p>
 
-<footer th:replace="fragments/layout :: site-footer" ></footer>
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-lg-6">
+            <div id="search-header">
+                <span class="search-header-block" th:text="#{select-search-type}">Select what you want to find: </span>
+                <div class="search-header-block-active">
+                    <a href="#" th:text="#{food}">Food</a>
+                </div>
+                <div class="search-header-block">
+                    <a href="#" th:text="#{recipe}">Recipe</a>
+                </div>
+                <div class="search-header-block">
+                    <a href="#" th:text="#{workout}">Workout</a>
+                </div>
+                <div class="search-header-block">
+                    <a href="#" th:text="#{kitchen}">Kitchen</a>
+                </div>
+                <div class="search-header-block">
+                    <a href="#" th:text="#{user}">User</a>
+                </div>
+            </div>
+
+            <div class="pad">
+                <div class="d-inline-block">
+                    <h4 th:text="#{find-food}" class="d-inline-block">Find food:</h4>
+                    <input class="d-inline-block" title="Enter food name" type="text" id="searchInput" value="">
+                    <input type="button" onclick="showResults();" value="Show results">
+                </div>
+
+                <div>
+                    <form class="d-inline-block">
+                        <span class="d-inline-block" style="font-weight: bold"
+                              th:text="#{choose-source}">Choose source</span>:
+                        <div class="d-inline-block">
+                            <label class="checkbox-inline mr-1" id="select-all" onchange="toggleAll(this);" >
+                                <span th:text="#{all}">all</span>
+                                <input type="checkbox" checked>
+                            </label>
+                            <label class="checkbox-inline mr-1">
+                                <span th:text="#{kitchen}">kitchen</span>
+                                <input type="checkbox" name="source" checked >
+                            </label>
+                            <label class="checkbox-inline mr-1">
+                                <span th:text="#{shopping-list}">shopping list</span>
+                                <input type="checkbox" name="source" checked>
+                            </label>
+                            <label class="checkbox-inline mr-1" >
+                                <span th:text="#{diet-schedule}">diet schedule</span>
+                                <input type="checkbox" name="source" checked>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="pad">
+                <h3 th:text="#{result}">Result</h3>
+
+                <div id="results">
+                    <div class="col-9">
+                        <div class="list-group" id="result-tab" role="tablist">
+                            <h6 style="color: #734d52" th:text="#{enter-name-to-get-result}">Enter item name to get results</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="pad">
+                    <div id="detailed">
+                        <h5 th:text="#{detailed-info-about-selected-item}">Detailed information about selected item</h5>
+                        <div class="tab-content" id="result-tab-content" th:text="#{select-to-get-detailed-info}">Select on item to get detailed information</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<h1 th:text="#{greetings}">Welcome</h1>
+<p th:text="#{welcome-to-dk}">Welcome to the Digital Kitchen system.</p>
+
+
+
+<footer th:replace="fragments/layout :: site-footer"></footer>
+
+
+<div id="import-scripts">
+    <script type="text/javascript" src=".././static/js/homepage.js" th:src="@{/js/homepage.js}"></script>
+</div>
+
 </body>
 </html>

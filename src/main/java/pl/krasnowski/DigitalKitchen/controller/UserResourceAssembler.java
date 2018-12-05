@@ -17,6 +17,6 @@ class UserResourceAssembler implements ResourceAssembler<User, Resource<User>> {
 
         return new Resource<>(user,
                 ControllerLinkBuilder.linkTo(methodOn(UserController.class).one(user.getUserID())).withSelfRel(),
-                linkTo(methodOn(UserController.class).all()).withRel("employees"));
+                linkTo(methodOn(UserController.class).all()).withRel("users"));
     }
 }

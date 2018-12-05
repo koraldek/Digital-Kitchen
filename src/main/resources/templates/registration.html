@@ -9,19 +9,21 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
+
 <body>
-<header th:replace="layout :: site-header"></header>
+
+<header th:replace="fragments/layout :: site-header"></header>
+
 
 <form th:action="@{/login}" method="get">
     <button class="btn btn-md btn-warning btn-block" type="Submit" th:text="#{to-login-page}">Go To Login Page</button>
 </form>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <form autocomplete="off" action="#" th:action="@{/registration}"
-                  th:object="${user}" method="post"
-                  role="form">
+    <div class="row" style="background-color: #eee; border: 3px dotted rgba(0,0,0,0.1);">
+        <div class="col-md-6 col-md-offset-3" >
+            <form autocomplete="off" action="#" th:action="@{/registration}" th:object="${user}" method="post"
+                  role="form" >
                 <h2 class="col-sm-9" th:text="#{creating-account}">Creating new account</h2>
 
                 <div class="form-group col-sm-9">
@@ -70,6 +72,9 @@
     </div>
 </div>
 
-<footer th:replace="layout :: site-footer"></footer>
+<footer th:replace="fragments/layout :: site-footer"></footer>
+
+<div th:replace="fragments/layout :: imports"></div>
+
 </body>
 </html>

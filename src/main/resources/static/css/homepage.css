@@ -1,0 +1,46 @@
+.pad {
+    background-color: whitesmoke;
+    opacity: 0.9;
+}
+
+#search-header {
+    background-color: whitesmoke;
+    color: #0e90d2;
+}
+
+.search-header-block {
+    margin-left: 1px;
+    margin-right: 1px;
+    padding: 5px;
+    color: #8e4f00;
+    text-decoration: none;
+    border:1px solid #000000;
+    display: inline-block;
+    pointer-events:none; /*TODO: temporary disable buttons till implementing options */
+}
+
+.search-header-block-active {
+    margin-left: 1px;
+    margin-right: 1px;
+    padding: 6px;
+    color: #8e4f00;
+    background-color: #e4e2e1;
+    text-decoration: none;
+    border-top:1px solid #000000;
+    border-right:1px solid #000000;
+    border-left:1px solid #000000;
+    display: inline-block;
+}
+
+a {
+    color:inherit;
+    text-decoration: none;
+}
+a:visited {
+    color:inherit;
+    text-decoration: none;
+}
+
+table, th, td {
+    border: 1px solid black;
+}

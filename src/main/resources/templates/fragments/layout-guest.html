@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.thymeleaf.org ">
-<head th:fragment="site-head">
+<head>
     <meta charset="UTF-8"/>
 </head>
 
@@ -22,6 +22,8 @@
         </button>
 
         <div class="collapse navbar-collapse" id="main-menu">
+
+            <!--left side of navbar-->
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
                     <a class="nav-link menu-icon" href="../homepage.html" th:href="@{/}">
@@ -138,7 +140,7 @@
 <p>Welcome to the Digital Kitchen system.</p>
 
 
-<footer class="bg-success m-lg-1" style="text-align: center" th:fragment="site-footer" th:text="'&copy; ' + #{footer-content}">
+<footer class="bg-success page-footer" style="text-align: center" th:fragment="site-footer" th:text="'&copy; ' + #{footer-content}">
     &copy; Digital kitchen - universal food managing system, 2018
 </footer>
 

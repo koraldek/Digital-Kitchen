@@ -25,7 +25,7 @@ public class CustomizedUserDAOImpl implements CustomizedUserDAO {
     private EntityManager em;
 
     @Override
-    public void updateUser(UserDTO userDTO) {
+    public void updateUserDTO(UserDTO userDTO) {
         User user_ref = em.find(User.class, userDTO.getUserID());
         log.debug("Updating user with data:" + userDTO.toString());
         BeanUtils.copyProperties(userDTO, user_ref);

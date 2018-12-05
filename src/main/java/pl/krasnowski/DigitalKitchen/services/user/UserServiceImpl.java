@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUser(UserDTO userDTO) {
-        userDAO.updateUser(userDTO);
+        userDAO.updateUserDTO(userDTO);
         log.debug("Updated user profile to database. User ID:{}", userDTO.getUserID());
     }
 

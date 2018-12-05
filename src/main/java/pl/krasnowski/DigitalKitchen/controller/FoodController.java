@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Food;
 import pl.krasnowski.DigitalKitchen.model.domain.food.FoodProxy;
+import pl.krasnowski.DigitalKitchen.model.domain.food.Origin;
 import pl.krasnowski.DigitalKitchen.services.foodDbManager.DatabaseManager;
 
 import java.util.ArrayList;
@@ -22,12 +23,13 @@ class FoodController {
     @RequestMapping(value = "/autocomplete", method = RequestMethod.GET)
     public ArrayList<FoodProxy> getAutocompleteFoodList(@RequestParam("keyword") String keyword) {
 
-        ArrayList<FoodProxy> autocompleteFoodList;
-        autocompleteFoodList = databaseManager.getAutocompleteFoodList(keyword);
+        ArrayList<FoodProxy> autocompleteFoodList = databaseManager.getAutocompleteFoodList(keyword);
         ArrayList<FoodProxy> result = new ArrayList<>();
         if (autocompleteFoodList.size() > 12)
             for (int i = 0; i < 12; i++)
                 result.add(autocompleteFoodList.get(i));
+        else
+            result = autocompleteFoodList;
         return result;
     }
 

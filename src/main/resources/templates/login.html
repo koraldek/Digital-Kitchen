@@ -17,8 +17,7 @@
     </button>
 </form>
 
-<div class="container">
-    <img src="../static/img/login.jpg" th:src="@{/img/login.jpg}" class="img-responsive center-block" alt="Logo"/>
+<div class="container " style="margin-top:30px">
     <form th:action="@{/login}" method="POST" class="form-signin">
         <h3 class="form-signin-heading" th:text="#{greetings}">Welcome!</h3>
         <br/>
@@ -41,5 +40,7 @@
     </form>
 </div>
 </body>
+
 <div th:replace="fragments/layout :: imports"></div>
+
 </html>
