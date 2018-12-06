@@ -6,9 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.krasnowski.DigitalKitchen.model.DAO.RoleDAO;
 import pl.krasnowski.DigitalKitchen.model.DAO.UserDAO;
 import pl.krasnowski.DigitalKitchen.model.domain.user.*;
@@ -16,15 +22,12 @@ import pl.krasnowski.DigitalKitchen.services.SocialService;
 import pl.krasnowski.DigitalKitchen.services.diet.DietManager;
 import pl.krasnowski.DigitalKitchen.services.foodDbManager.ApiRestrictionServiceImpl;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Service
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     @NonNull
@@ -46,12 +49,43 @@ public class UserServiceImpl implements UserService {
     @NonNull
     private final SocialService socialService;
 
-    public UserServiceImpl(UserDAO userDAO, RoleDAO roleDAO, BCryptPasswordEncoder bCryptPasswordEncoder, @Lazy DietManager dietService, @Lazy SocialService socialService) {
+    public UserServiceImpl(UserDAO userDAO, RoleDAO roleDAO,@Lazy BCryptPasswordEncoder bCryptPasswordEncoder, @Lazy DietManager dietService, @Lazy SocialService socialService) {
         this.userDAO = userDAO;
         this.roleDAO = roleDAO;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.dietService = dietService;
         this.socialService = socialService;
+    }
+
+
+    @Transactional(readOnly=true)
+    @Override
+    public UserDetails loadUserByUsername(final String username)
+            throws UsernameNotFoundException {
+
+        User user = userDAO.findByUsername(username);
+        List<GrantedAuthority> authorities =
+                buildUserAuthority(user.getRoles());
+
+        return buildUserForAuthentication(user, authorities);
+    }
+
+    // Converts pl.krasnowski.DigitalKitchen.model.domain.user.User user to
+    // org.springframework.security.core.userdetails.User
+    private org.springframework.security.core.userdetails.User buildUserForAuthentication(User user,
+                                            List<GrantedAuthority> authorities) {
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                (user.getActive() != 0), true, true, true, authorities);
+    }
+
+    private List<GrantedAuthority> buildUserAuthority(Set<Role> userRoles) {
+        Set<GrantedAuthority> setAuths = new HashSet<>();
+
+        // Build user's authorities
+        for (Role userRole : userRoles) {
+            setAuths.add(new SimpleGrantedAuthority(userRole.getRoleName()));
+        }
+        return new ArrayList<>(setAuths);
     }
 
     @Override

@@ -2,12 +2,11 @@ package pl.krasnowski.DigitalKitchen.model.domain.food;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.ToString;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import pl.krasnowski.DigitalKitchen.model.domain.user.Intolerance;
-import pl.krasnowski.DigitalKitchen.model.domain.user.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,6 +14,7 @@ import java.util.*;
 
 @Entity
 @Data
+@ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Component
 public class Food extends Consumable implements Serializable {
@@ -89,11 +89,8 @@ public class Food extends Consumable implements Serializable {
 
     @Override
     public String getName() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> usr = Optional.ofNullable((User) auth.getPrincipal());
-        String language = usr.<IllegalStateException>orElseThrow(() -> {
-            throw new IllegalStateException("Principal object is null.");
-        }).getLanguage();
-        return getName(language);
+        Locale loc = new Locale(LocaleContextHolder.getLocale().getLanguage());
+
+        return getName(loc.getDisplayLanguage(loc));
     }
 }

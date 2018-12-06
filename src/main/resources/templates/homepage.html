@@ -20,9 +20,9 @@
 
     <div class="row">
 
-        <div class="col-lg-6">
+        <div class="col-lg-6 pad m-1">
             <div id="search-header">
-                <span class="search-header-block" th:text="#{select-search-type}">Select what you want to find: </span>
+                <span class="m-1 search-header-block" th:text="#{select-search-type}">Select what you want to find: </span>
                 <div class="search-header-block-active">
                     <a href="#" th:text="#{food}">Food</a>
                 </div>
@@ -32,7 +32,7 @@
                 <div class="search-header-block">
                     <a href="#" th:text="#{workout}">Workout</a>
                 </div>
-                <div class="search-header-block">
+                <div class="search-header-block" style="margin-left: 7px">
                     <a href="#" th:text="#{kitchen}">Kitchen</a>
                 </div>
                 <div class="search-header-block">
@@ -40,31 +40,31 @@
                 </div>
             </div>
 
-            <div class="pad">
+            <div>
                 <div class="d-inline-block">
-                    <h4 th:text="#{find-food}" class="d-inline-block">Find food:</h4>
+                    <h4 th:text="#{find-food}" class="d-inline-block m-1">Find food:</h4>
                     <input class="d-inline-block" title="Enter food name" type="text" id="searchInput" value="">
-                    <input type="button" onclick="showResults();" value="Show results">
+                    <input type="button" onclick="showResults();" th:value="#{search}" value="search">
                 </div>
 
                 <div>
                     <form class="d-inline-block">
-                        <span class="d-inline-block" style="font-weight: bold"
+                        <span class="d-inline-block ml-1" style="font-weight: bold"
                               th:text="#{choose-source}">Choose source</span>:
                         <div class="d-inline-block">
                             <label class="checkbox-inline mr-1" id="select-all" onchange="toggleAll(this);" >
                                 <span th:text="#{all}">all</span>
                                 <input type="checkbox" checked>
                             </label>
-                            <label class="checkbox-inline mr-1">
+                            <label class="checkbox-inline ml-2">
                                 <span th:text="#{kitchen}">kitchen</span>
                                 <input type="checkbox" name="source" checked >
                             </label>
-                            <label class="checkbox-inline mr-1">
+                            <label class="checkbox-inline ml-2">
                                 <span th:text="#{shopping-list}">shopping list</span>
                                 <input type="checkbox" name="source" checked>
                             </label>
-                            <label class="checkbox-inline mr-1" >
+                            <label class="checkbox-inline ml-2" >
                                 <span th:text="#{diet-schedule}">diet schedule</span>
                                 <input type="checkbox" name="source" checked>
                             </label>
@@ -74,7 +74,7 @@
             </div>
         </div>
 
-        <div class="col-lg-6">
+        <div class="col-lg-6 pad m-1" >
             <div class="pad">
                 <h3 th:text="#{result}">Result</h3>
 
@@ -90,8 +90,8 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-6">
-                <div class="pad">
+            <div class="col-lg-6 pad m-1">
+                <div>
                     <div id="detailed">
                         <h5 th:text="#{detailed-info-about-selected-item}">Detailed information about selected item</h5>
                         <div class="tab-content" id="result-tab-content" th:text="#{select-to-get-detailed-info}">Select on item to get detailed information</div>
@@ -101,18 +101,14 @@
         </div>
 
     </div>
+
 </div>
-
-<h1 th:text="#{greetings}">Welcome</h1>
-<p th:text="#{welcome-to-dk}">Welcome to the Digital Kitchen system.</p>
-
-
 
 <footer th:replace="fragments/layout :: site-footer"></footer>
 
 
 <div id="import-scripts">
-    <script type="text/javascript" src=".././static/js/homepage.js" th:src="@{/js/homepage.js}"></script>
+    <script type="text/javascript" src=".././static/js/homepage-test.js" th:src="@{/js/homepage.js}"></script>
 </div>
 
 </body>

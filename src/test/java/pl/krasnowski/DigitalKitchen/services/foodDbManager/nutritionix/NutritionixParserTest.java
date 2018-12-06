@@ -59,10 +59,25 @@ class NutritionixParserTest {
         when(uService.getCurrentUser()).thenReturn(user);
         when(user.getNutritionix_id()).thenReturn(0);
 
-        nutritionixManager = new NutritionixManager(uService,nutritionixKeys);
+        nutritionixManager = new NutritionixManager(uService, nutritionixKeys);
     }
 
     @Test
+    void checkSettingNutrientsAndServingSizesAndLanguage() {
+        Food food = nutritionixManager.getFoodByID("52ae479aaf5a0bb91c015136"); //Cheesecake
+
+        assertAll(
+                () -> assertTrue( food.getNutrients().size() >= 4), // It should contains at least value of proteins, carbohydrates, fat and calories
+                () -> assertFalse(food.getServingSizes().isEmpty()),
+                () -> assertFalse(StringUtils.isEmpty(food.getName("English")))
+        );
+        System.out.println(food.getName("eng"));
+        System.out.println(food.toString());
+
+    }
+
+    @Test
+    @org.junit.jupiter.api.Disabled // TODO: temporary disable
     @DisplayName("Check if returned object have photo tag or default image tag,sets ID and have exactly one Origin type - BRANDED OR COMMON.")
     void checkSettingImageAndIDAndOrigin() {
         assertAll(
@@ -74,7 +89,7 @@ class NutritionixParserTest {
                     assertFalse(food.getForeignID(DatabaseManager.NUTRITIONIX_DB_NAME).isEmpty());
                 },
                 () -> {
-                    for (Food food : nutritionixManager.getFoodList(sampleFoodName,null)) {
+                    for (Food food : nutritionixManager.getFoodList(sampleFoodName, null)) {
                         assertTrue(!StringUtils.isEmpty(food.getPhoto()) || food.getPhoto().equals(DatabaseManager.DEFAULT_FOOD_PHOTO_URL));
                         assertTrue(food.getOrigin().contains(Origin.BRANDED) || food.getOrigin().contains(Origin.COMMON) && food.getOrigin().size() == 1);
                         assertFalse(food.getForeignID(DatabaseManager.NUTRITIONIX_DB_NAME).isEmpty());

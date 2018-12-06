@@ -43,7 +43,7 @@ interface NutritionixParser {
     }
 
     /**
-     * Parses diet from external database.
+     * Parses food from external database. Use this method for common food (it's name) or with its ID (branded).
      *
      * @param searchByCodeResult - Response body from server
      * @return parsed object Food
@@ -84,9 +84,15 @@ interface NutritionixParser {
         for (FullNutrient n : inputObject.getFullNutrients()) {
             if (n.value >= 0.0001) { // ignore ~0 values
                 Nutrient nutrient = FoodSystemConfig.getNutrientsList().stream().filter( // compare id with one in nutrientsList and convert to Nutrient object
-                        nutr -> n.attrId == Long.valueOf(
-                                nutr.getDbTags().get(NUTRITIONIX_DB_NAME)))
+                        nut -> n.attrId == Long.valueOf(
+                                nut.getDbTags().get(NUTRITIONIX_DB_NAME)))
                         .findFirst().orElse(null);
+
+                if (nutrient == null)
+                    throw new IllegalArgumentException("Required nutrient ID=" + n.attrId + " not found in nutrients list.");
+
+                if (nutrient.getNotes() == null)
+                    nutrient.setNotes("");
 
                 food.addNutrient(nutrient, n.value);
             }

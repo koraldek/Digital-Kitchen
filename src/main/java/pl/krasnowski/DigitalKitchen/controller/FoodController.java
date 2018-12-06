@@ -11,6 +11,7 @@ import pl.krasnowski.DigitalKitchen.model.domain.food.Origin;
 import pl.krasnowski.DigitalKitchen.services.foodDbManager.DatabaseManager;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/food")
@@ -24,13 +25,8 @@ class FoodController {
     public ArrayList<FoodProxy> getAutocompleteFoodList(@RequestParam("keyword") String keyword) {
 
         ArrayList<FoodProxy> autocompleteFoodList = databaseManager.getAutocompleteFoodList(keyword);
-        ArrayList<FoodProxy> result = new ArrayList<>();
-        if (autocompleteFoodList.size() > 12)
-            for (int i = 0; i < 12; i++)
-                result.add(autocompleteFoodList.get(i));
-        else
-            result = autocompleteFoodList;
-        return result;
+
+        return (ArrayList<FoodProxy>) autocompleteFoodList.stream().limit(12).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/detailed", method = RequestMethod.GET)

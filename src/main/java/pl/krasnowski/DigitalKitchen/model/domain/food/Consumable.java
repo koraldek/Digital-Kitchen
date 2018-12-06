@@ -13,21 +13,20 @@ import java.util.Map;
 @Component
 public abstract class Consumable {
 
-    private static final long serialVersionUID = 9176276121738745661L;
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name ="consumable_ID" )
-    private long consumableID;
+    protected long consumableID;
 
     /**
      * Expiration time after diet is opened/created in hours (when hold in proper conditions)
      */
-    private int expTimeAfterOpen;
+    protected int expTimeAfterOpen;
 
     @ElementCollection
     @MapKeyColumn(name = "Nutrient_id")
     @Column(name = "quantity")
-    private Map<Nutrient, Double> nutrients = new HashMap<>();
+    protected Map<Nutrient, Double> nutrients = new HashMap<>();
 
     public void addNutrient(Nutrient nutrient, double value) {
         nutrients.put(nutrient, value);

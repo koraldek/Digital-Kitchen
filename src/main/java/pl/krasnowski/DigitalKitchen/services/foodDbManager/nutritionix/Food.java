@@ -3,6 +3,7 @@ package pl.krasnowski.DigitalKitchen.services.foodDbManager.nutritionix;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -125,6 +126,9 @@ class Food implements IFood {
 
     @Override
     public String getFoodID() {
-        return foodName;
+        if (StringUtils.isEmpty(this.nixItemId))
+            return this.foodName;
+        else
+            return this.nixItemId;
     }
 }
