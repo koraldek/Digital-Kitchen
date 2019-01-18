@@ -9,7 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Stores information about current nutrients consumed by user and aggregates DietDays which contain preferred daily dietDay
+ * Stores information about nutrients consumed by user and aggregates
+ * DietDays which contains preferred daily meals and workout.
  */
 @Entity
 @Data
@@ -30,8 +31,8 @@ public class Diet {
 
     @JoinTable(
             name = "diet_diet_days",
-            joinColumns = {@JoinColumn(name = "dietID")},
-            inverseJoinColumns = {@JoinColumn(name = "dietDaysID")}
+            joinColumns = {@JoinColumn(name = "diet_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "diet_day_ID")}
     )
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<DietDay> dietDays;
@@ -42,12 +43,11 @@ public class Diet {
 
     @JoinTable(
             name = "diet_nutrients",
-            joinColumns = {@JoinColumn(name = "dietID")},
+            joinColumns = {@JoinColumn(name = "diet_ID")},
             inverseJoinColumns = {@JoinColumn(name = "diet_nutrient_ID")}
     )
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DietNutrient> nutrients;
-
 
     @Enumerated(EnumType.ORDINAL)
     private DietType dietType;

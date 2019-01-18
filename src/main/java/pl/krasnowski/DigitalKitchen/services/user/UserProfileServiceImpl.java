@@ -1,23 +1,30 @@
 package pl.krasnowski.DigitalKitchen.services.user;
 
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.krasnowski.DigitalKitchen.model.DAO.UserDAO;
-import pl.krasnowski.DigitalKitchen.model.domain.diet.DietDay;
+import pl.krasnowski.DigitalKitchen.model.DTO.UserDTO;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.Meal;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Recipe;
 import pl.krasnowski.DigitalKitchen.model.domain.physicalActivity.PhysicalActivity;
 import pl.krasnowski.DigitalKitchen.model.domain.user.*;
 import pl.krasnowski.DigitalKitchen.services.diet.DietManager;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Service
+@Slf4j
+@Transactional
 public class UserProfileServiceImpl implements UserProfileService { //TODO: Add user photo feature
 
     @Autowired
@@ -88,24 +95,25 @@ public class UserProfileServiceImpl implements UserProfileService { //TODO: Add 
         uService.getCurrentUser().removeFoodPreferention(foodPreferention);
     }
 
+
     @Override
-    public HistoryDay getCurrentHistoryDay() {
-        HistoryDay hd = uService.getCurrentUser().getHistoryDays().get(LocalDate.now());
+    @Transactional
+    public HistoryDay getHistoryDay(LocalDate date) {
+        User currUser = uService.getCurrentUser();
+        HistoryDay hd = currUser.getHistoryDay(date);
 
         if (hd == null) {
+            log.debug("Creating new history day for date:{}", date);
             hd = new HistoryDay();
-            DietDay dd = dietManager.initializeDietDay();
-            hd.setDietDay(dd);
+            hd.setWeight(currUser.getWeight());
+            hd.setFoodAndWorkoutDiary(dietManager.initializeDietDay());
+//            hd.getFoodAndWorkoutDiary().setDayDate(Timestamp.valueOf(date.atStartOfDay())); //xdd
+            hd.getFoodAndWorkoutDiary().setDayDate(
+                    new Timestamp(ZonedDateTime.of(date.atStartOfDay(), ZoneId.of("UTC")).toInstant().toEpochMilli()));
 
-            uService.getCurrentUser().addHistoryDay(LocalDate.now(), hd);
+            currUser.addHistoryDay(date, hd);
         }
         return hd;
-    }
-
-
-    @Override
-    public HistoryDay getHistoryDay(LocalDate date) {
-        return uService.getCurrentUser().getHistoryDay(date);
     }
 
     @Override
@@ -116,7 +124,7 @@ public class UserProfileServiceImpl implements UserProfileService { //TODO: Add 
     @Override
     public void updateHistoryDay(HistoryDay hd) {
         uService.getCurrentUser().getHistoryDays()
-                .replace(hd.getDietDay().getDayDate().toLocalDateTime().toLocalDate(), hd);
+                .replace(hd.getFoodAndWorkoutDiary().getDayDate(), hd);
     }
 
     @Override
@@ -126,7 +134,7 @@ public class UserProfileServiceImpl implements UserProfileService { //TODO: Add 
 
     @Override
     public void addHistoryDay(HistoryDay hd) {
-        uService.getCurrentUser().addHistoryDay(hd.getDietDay().getDayDate().toLocalDateTime().toLocalDate(), hd);
+        uService.getCurrentUser().addHistoryDay(hd.getFoodAndWorkoutDiary().getDayDate().toLocalDateTime().toLocalDate(), hd);
     }
 
     @Override

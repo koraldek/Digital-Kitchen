@@ -6,11 +6,10 @@
 
     <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
 
     <link rel="stylesheet" type="text/css" href="../../static/css/main.css" th:href="@{/css/main.css}">
     <link rel="stylesheet" type="text/css" href="../../static/css/diet/current.css" th:href="@{/css/diet/current.css}">
-    <link rel="stylesheet" type="text/css" href="../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
-    <!--<link rel="stylesheet" type="text/css" href="../../static/css/diet/current.css">-->
     <script th:inline="javascript" type="text/javascript">
         function colorScale(perc) {
             var r, g, b = 0;
@@ -82,15 +81,14 @@
 
 </head>
 <body>
-<header th:replace="${@user.username != null} ?
-                      ~{fragments/layout       :: site-header} :
-                      ~{fragments/layout-guest :: site-header
-                     }">
+<header th:replace="fragments/layout :: site-header">
+    Unprocessed main page
 </header>
+<div th:replace="fragments/layout :: imports"></div>
 
 <main>
 
-    <nav class="navbar navbar-dark bg-jumpers navbar-expand-md">
+    <nav class="navbar navbar-expand-md">
 
 
         <button class="navbar-toggler float-right" type="button" data-toggle="collapse" data-target="#mainmenu"
@@ -104,14 +102,14 @@
 
                 <li class="nav-item px-2" >
                     <a id="contact-dietetic" href="/Digital-Kitchen/src/main/resources/templates/homepage.html" th:href="@{/}">
-                        <button class="btn-dark">Contact dietetic</button>
+                        <button class="btn-warning">Contact dietetic</button>
                     </a>
                 </li>
 
                 <li class="nav-item px-2">
-                    <div >
+                    <div>
                         <a id="create-diet" href="create-diet.html" th:href="@{/}">
-                            <input class="btn-dark"  type="button" value="Create new"> </a>
+                            <input class="btn-warning"  type="button" value="Create new"> </a>
                     </div>
                 </li>
 
@@ -121,7 +119,7 @@
                     <form class="form-inline" id="change-diet" action="#" th:action="@{/api/diets(diet_id=dietID}" method="GET">
                         <label >
                             Change diet:
-                            <select onchange="this.form.submit()" name="dietID"
+                            <select class="btn-warning" onchange="this.form.submit()" name="dietID"
                                     th:value="${diet.dietID}" th:remove="all-but-first">
                                 <option th:each="d : ${dietList}"
                                         th:value="${d.dietID}" th:text="${d.DietName}">Bodybuilder's diet
@@ -137,104 +135,145 @@
     </nav>
 
 
-    <section id="main">
-    </section>
-
         <div class="container">
 
             <header>
                 <h3 th:text="${'Current diet: ' + diet.getDietName()}">Current diet: Bodybuilder's diet </h3>
             </header>
 
-            <div class="row">
 
-                        <div id= "diet-summary" class="row col-md-6">
-                            <p> Diet summary:</p>
+            <h1> present day meals:</h1>
+            <table>
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>meal time</th>
+                    <th>dishes</th>
+                </tr>
+                </thead>
+                <tbody th:remove="all-but-first">
+                <tr th:each="meal : ${diary.meals}">
+                    <td th:text="${meal.name}">Breakfast</td>
+                    <td th:text="${meal.mealTime}">10:00</td>
+                    <td>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>Food name</th>
+                                <th>quantity</th>
+                                <th>unit</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="foodWrapper : ${meal.dishes}">
+                                <td th:text="${foodWrapper.food.name}">milk</td>
+                                <td th:text="${foodWrapper.quantity}">1.</td>
+                                <td th:text="${foodWrapper.unit}">liter</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Dinner</td>
+                    <td>15:13</td>
+                    <td>...</td>
+                </tr>
+                <tr>
+                    <td>Supper</td>
+                    <td>19:15</td>
+                    <td>dishes</td>
+                </tr>
+                <tr>
+                    <td>Snack</td>
+                    <td>11:13</td>
+                    <td>avocado</td>
+                </tr>
+                </tbody>
+            </table>
 
-                            <div id="chartContainer" class="col-8" style="height: 250px"></div>
-                        </div>
+            <!--<div class="row">-->
 
+                        <!--<div id= "diet-summary" class="row col-md-6">-->
+                            <!--<p> Diet summary:</p>-->
 
+                            <!--<div id="chartContainer" class="col-8" style="height: 250px"></div>-->
+                        <!--</div>-->
 
-                <div id="diet-days" class="row col-sm-10 col-md-9" >
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>name</th>
-                            <th>calories to gain</th>
-                            <th>carbohydrates</th>
-                            <th>proteins</th>
-                            <th>fat</th>
-                            <th>workouts</th>
-                            <th>meals</th>
-                        </tr>
-                        </thead>
-                        <tbody th:remove="all-but-first">
-                        <tr class="col-sm-6 col-lg-3" th:each="dd : ${dietDays}">
-                            <td th:text="${dd.dayName}">Monday</td>
-                            <td th:text="${dd.kCalGained}">1850</td>
-                            <td th:text="${dd.carbohydrates}">1050</td>
-                            <td th:text="${dd.proteins}">650</td>
-                            <td th:text="${dd.fat}">100</td>
-                            <td>workouts details</td>
-                            <td>meals details</td>
-                        </tr>
-                        <tr class="col-sm-6 col-lg-3" >
-                            <td>Tuesday</td>
-                            <td>1850</td>
-                            <td>1050</td>
-                            <td>650</td>
-                            <td>100</td>
-                        </tr>
-                        <tr class="col-sm-6 col-lg-3" >
-                            <td>Wednesday</td>
-                            <td>1850</td>
-                            <td>1050</td>
-                            <td>650</td>
-                            <td>100</td>
-                        </tr>
-                        <tr class="col-sm-6 col-lg-3" >
-                            <td>Thursday</td>
-                            <td>1850</td>
-                            <td>1050</td>
-                            <td>650</td>
-                            <td>100</td>
-                        </tr>
-                        <tr class="col-sm-6 col-lg-3" >
-                            <td>Friday</td>
-                            <td>1850</td>
-                            <td>1050</td>
-                            <td>650</td>
-                            <td>100</td>
-                        </tr>
-                        <tr class="col-sm-6 col-lg-3">
-                            <td>Saturday</td>
-                            <td>1850</td>
-                            <td>1050</td>
-                            <td>650</td>
-                            <td>100</td>
-                        </tr>
-                        <tr class="col-sm-6 col-lg-3">
-                            <td>Sunday</td>
-                            <td>1850</td>
-                            <td>1050</td>
-                            <td>650</td>
-                            <td>100</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <!--<div id="diet-days" class="row col-sm-10 col-md-9" >-->
+                    <!--<table>-->
+                        <!--<thead>-->
+                        <!--<tr>-->
+                            <!--<th>name</th>-->
+                            <!--<th>calories to gain</th>-->
+                            <!--<th>carbohydrates</th>-->
+                            <!--<th>proteins</th>-->
+                            <!--<th>fat</th>-->
+                            <!--<th>workouts</th>-->
+                            <!--<th>meals</th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                        <!--<tbody th:remove="all-but-first">-->
+                        <!--<tr class="col-sm-6 col-lg-3" th:each="dd : ${dietDays}">-->
+                            <!--<td th:text="${dd.dayName}">Monday</td>-->
+                            <!--<td th:text="${dd.kCalGained}">1850</td>-->
+                            <!--<td th:text="${dd.carbohydrates}">1050</td>-->
+                            <!--<td th:text="${dd.proteins}">650</td>-->
+                            <!--<td th:text="${dd.fat}">100</td>-->
+                            <!--<td>workouts details</td>-->
+                            <!--<td>meals details</td>-->
+                        <!--</tr>-->
+                        <!--<tr class="col-sm-6 col-lg-3" >-->
+                            <!--<td>Tuesday</td>-->
+                            <!--<td>1850</td>-->
+                            <!--<td>1050</td>-->
+                            <!--<td>650</td>-->
+                            <!--<td>100</td>-->
+                        <!--</tr>-->
+                        <!--<tr class="col-sm-6 col-lg-3" >-->
+                            <!--<td>Wednesday</td>-->
+                            <!--<td>1850</td>-->
+                            <!--<td>1050</td>-->
+                            <!--<td>650</td>-->
+                            <!--<td>100</td>-->
+                        <!--</tr>-->
+                        <!--<tr class="col-sm-6 col-lg-3" >-->
+                            <!--<td>Thursday</td>-->
+                            <!--<td>1850</td>-->
+                            <!--<td>1050</td>-->
+                            <!--<td>650</td>-->
+                            <!--<td>100</td>-->
+                        <!--</tr>-->
+                        <!--<tr class="col-sm-6 col-lg-3" >-->
+                            <!--<td>Friday</td>-->
+                            <!--<td>1850</td>-->
+                            <!--<td>1050</td>-->
+                            <!--<td>650</td>-->
+                            <!--<td>100</td>-->
+                        <!--</tr>-->
+                        <!--<tr class="col-sm-6 col-lg-3">-->
+                            <!--<td>Saturday</td>-->
+                            <!--<td>1850</td>-->
+                            <!--<td>1050</td>-->
+                            <!--<td>650</td>-->
+                            <!--<td>100</td>-->
+                        <!--</tr>-->
+                        <!--<tr class="col-sm-6 col-lg-3">-->
+                            <!--<td>Sunday</td>-->
+                            <!--<td>1850</td>-->
+                            <!--<td>1050</td>-->
+                            <!--<td>650</td>-->
+                            <!--<td>100</td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
+                    <!--</table>-->
 
-                </div>
-                </div>
+                <!--</div>-->
+                <!--</div>-->
             </div>
 
-
-
 </main>
-<footer th:replace="layout :: site-footer" ></footer>
-
-<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="../../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 </body>
+<footer th:replace="fragments/layout :: site-footer" ></footer>
+
 </html>

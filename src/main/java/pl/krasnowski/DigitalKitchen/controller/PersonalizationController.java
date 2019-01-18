@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
-import pl.krasnowski.DigitalKitchen.model.domain.user.UserDTO;
+import pl.krasnowski.DigitalKitchen.model.DTO.UserDTO;
 import pl.krasnowski.DigitalKitchen.services.user.UserProfileService;
 import pl.krasnowski.DigitalKitchen.services.user.UserService;
 
@@ -20,6 +20,7 @@ public class PersonalizationController {
     private final UserService userService;
 
     private final UserProfileService userProfileService;
+
 
     public PersonalizationController(UserService userService, UserProfileService userProfileService) {
         this.userService = userService;

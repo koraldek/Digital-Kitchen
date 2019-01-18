@@ -1,24 +1,20 @@
 package pl.krasnowski.DigitalKitchen.model.domain.food;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Proxy of Food and other descendants of Consumable. <br>
+ * {@link FoodProxy#foodType} determines concrete implementation of Consumable. <br>
+ * {@link FoodProxy#foodID} and {@link FoodProxy#dbName} intercepts to real food object.
+ */
 @Component
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class FoodProxy {
-    private String foodID, name, dbName, photo;
+    private String foodID, name, dbName, photo, foodType;
     private Origin origin;
-
-    public FoodProxy() {
-    }
-
-    public FoodProxy(String foodID, String name, String dbName, String photo, Origin origin) {
-        this.foodID = foodID;
-        this.name = name;
-        this.dbName = dbName;
-        this.photo = photo;
-        this.origin = origin;
-    }
 }

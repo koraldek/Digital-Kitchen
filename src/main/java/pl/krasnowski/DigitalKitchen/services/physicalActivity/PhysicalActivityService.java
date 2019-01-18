@@ -12,17 +12,7 @@ import java.util.Map;
 @Service
 public interface PhysicalActivityService {
 
-    /**
-     * Adds physical activity to current day.
-     */
-    void addPhysicalActivity(PhysicalActivity pa);
-
     void addPhysicalActivity(PhysicalActivity pa, LocalDate date);
-
-    /**
-     * @return set of activities from current day.
-     */
-    List<PhysicalActivity> getPhysicalActivityOfDay();
 
     List<PhysicalActivity> getPhysicalActivityOfDay(LocalDate date);
 
@@ -31,22 +21,18 @@ public interface PhysicalActivityService {
      */
     Map<LocalDate, List<PhysicalActivity>> getPhysicalActivity(LocalDate startDate, LocalDate endDate);
 
-
     void updatePhysicalActivity(PhysicalActivity oldActivity, PhysicalActivity newActivity, LocalDate date);
 
     void removePhysicalActivity(PhysicalActivity pa, LocalDate date);
-
 
     void addPartner(User partner, PhysicalActivity pa);
 
     void removePartner(User partner, PhysicalActivity pa);
 
-
-    int getBurnedCaloriesToday();
-
-    int getBurnedCalories(LocalDate date);
-
-
+    /**
+     * @param physicalActivityType type of activity
+     * @return Activities of particular type
+     */
     Map<LocalDate, List<PhysicalActivity>> getActivitiesOfType(PhysicalActivityType physicalActivityType);
 
     Map<LocalDate, List<PhysicalActivity>> getActivitiesOfType(PhysicalActivityType physicalActivityType, LocalDate startDate, LocalDate endDate);

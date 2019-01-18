@@ -1,46 +1,16 @@
 package pl.krasnowski.DigitalKitchen.services.foodDbManager.nutritionix;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.ToString;
 
 import java.util.List;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-        "food_name",
-        "brand_name",
-        "serving_qty",
-        "serving_unit",
-        "serving_weight_grams",
-        "nf_calories",
-        "nf_total_fat",
-        "nf_saturated_fat",
-        "nf_cholesterol",
-        "nf_sodium",
-        "nf_total_carbohydrate",
-        "nf_dietary_fiber",
-        "nf_sugars",
-        "nf_protein",
-        "nf_potassium",
-        "nf_p",
-        "full_nutrients",
-        "nix_brand_name",
-        "nix_brand_id",
-        "nix_item_name",
-        "nix_item_id",
-        "metadata",
-        "source",
-        "ndb_no",
-        "tags",
-        "alt_measures",
-        "photo",
-        "updated_at",
-        "nf_ingredient_statement"
-})
+@JsonIgnoreProperties(ignoreUnknown = true)
+@ToString
 class Food implements IFood {
     @JsonProperty("food_name")
-    private String foodName;
+    String foodName;
     @JsonProperty("brand_name")
     String brandName;
     @JsonProperty("serving_qty")
@@ -48,31 +18,10 @@ class Food implements IFood {
     @JsonProperty("serving_unit")
     String servingUnit;
     @JsonProperty("serving_weight_grams")
-    private int servingWeightGrams;
-    @JsonProperty("nf_calories")
-    long nfCalories;
-    @JsonProperty("nf_total_fat")
-    long nfTotalFat;
-    @JsonProperty("nf_saturated_fat")
-    long nfSaturatedFat;
-    @JsonProperty("nf_cholesterol")
-    long nfCholesterol;
-    @JsonProperty("nf_sodium")
-    long nfSodium;
-    @JsonProperty("nf_total_carbohydrate")
-    long nfTotalCarbohydrate;
-    @JsonProperty("nf_dietary_fiber")
-    long nfDietaryFiber;
-    @JsonProperty("nf_sugars")
-    long nfSugars;
-    @JsonProperty("nf_protein")
-    long nfProtein;
-    @JsonProperty("nf_potassium")
-    String nfPotassium;
-    @JsonProperty("nf_p")
-    String nfP;
+    int servingWeightGrams;
+
     @JsonProperty("full_nutrients")
-    private List<FullNutrient> fullNutrients = null;
+    List<FullNutrient> fullNutrients = null;
     @JsonProperty("nix_brand_name")
     String nixBrandName;
     @JsonProperty("nix_brand_id")
@@ -81,18 +30,15 @@ class Food implements IFood {
     String nixItemName;
     @JsonProperty("nix_item_id")
     String nixItemId;
-    @JsonProperty("metadata")
-    Metadata metadata;
+
     @JsonProperty("source")
     long source;
-    @JsonProperty("ndb_no")
-    String ndbNo;
     @JsonProperty("tags")
     Object tags;
     @JsonProperty("alt_measures")
-    private List<AltMeasure> altMeasures;
+    List<AltMeasure> altMeasures;
     @JsonProperty("photo")
-    private Photo photo;
+    Photo photo;
     @JsonProperty("updated_at")
     String updatedAt;
     @JsonProperty("nf_ingredient_statement")
@@ -109,8 +55,18 @@ class Food implements IFood {
     }
 
     @Override
-    public int getServingGramsWeight() {
+    public int getServingWeightGrams() {
         return servingWeightGrams;
+    }
+
+    @Override
+    public AltMeasure getPrimaryServingMeasure() {
+        AltMeasure pm = new AltMeasure();
+        pm.setMeasure(servingUnit);
+        pm.setQty((int) servingQty);
+        pm.setServingWeight(servingWeightGrams);
+
+        return pm;
     }
 
     @Override
@@ -125,6 +81,6 @@ class Food implements IFood {
 
     @Override
     public String getFoodID() {
-        return foodName;
+        return nixItemId;
     }
 }

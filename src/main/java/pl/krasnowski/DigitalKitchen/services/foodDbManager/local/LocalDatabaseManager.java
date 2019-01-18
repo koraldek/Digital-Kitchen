@@ -1,6 +1,8 @@
 package pl.krasnowski.DigitalKitchen.services.foodDbManager.local;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import pl.krasnowski.DigitalKitchen.model.DAO.FoodDAO;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Food;
 import pl.krasnowski.DigitalKitchen.model.domain.food.FoodProxy;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Recipe;
@@ -15,10 +17,9 @@ import java.util.Map;
 @Repository
 public class LocalDatabaseManager implements FoodDispatcher, RecipesDispatcher {
 
+    @Autowired
+    FoodDAO foodDAO;
 
-    public Food getFoodByID(long foodID) {
-        return null;
-    }
 
     @Override
     public ArrayList<FoodProxy> getAutocompleteFoodList(String keyword, Map<String, String> paramMap) {
@@ -30,10 +31,9 @@ public class LocalDatabaseManager implements FoodDispatcher, RecipesDispatcher {
         return null;
     }
 
-
     @Override
     public Food getFoodByID(String foodID) {
-        return null;
+        return foodDAO.findById(Long.valueOf(foodID)).orElse(null);
     }
 
     @Override

@@ -48,7 +48,7 @@
 
 </style>
 <body style="background-image: url(/img/background.jpg); min-height:100%;">
-<header th:replace="layout :: site-header"></header>
+<header th:replace="fragments/layout :: site-header"></header>
 
 
 <form id="edit-frame" th:action="@{/personalization/update}" th:object="${usr}" method="post" action="#">
@@ -114,7 +114,7 @@
 </form>
 
 
-<div th:replace="layout :: site-footer"></div>
+<div th:replace="fragments/layout :: site-footer"></div>
 
 </body>
 </html>

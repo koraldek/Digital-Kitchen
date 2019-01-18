@@ -1,5 +1,6 @@
 package pl.krasnowski.DigitalKitchen.services.foodDbManager;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -16,22 +17,23 @@ import static pl.krasnowski.DigitalKitchen.services.foodDbManager.DatabaseManage
 /**
  * Basic implementation include only local and nx database.
  */
-@Service
 @Primary
+@Service
 @Slf4j
+@AllArgsConstructor
 public class StrategyProfileBasic implements StrategyProfile {
 
     @Autowired
-    private NutritionixManager nutritionixManager;
+    private final NutritionixManager nutritionixManager;
     @Autowired
-    private EdemamManager edemamManager;
+    private final EdemamManager edemamManager;
     @Autowired
-    private LocalDatabaseManager localDatabaseManager;
+    private final LocalDatabaseManager localDatabaseManager;
     @Autowired
-    private ApiRestrictionService apiRestrictionService;
+    private final ApiRestrictionService apiRestrictionService;
 
     @Override
-    public FoodDispatcher getDbFoodManager(String dbName, int queryType[]) {
+    public FoodDispatcher getDbFoodManager(String dbName, int queryTypes[]) {
         FoodDispatcher fd;
 
         switch (dbName) {
@@ -45,13 +47,13 @@ public class StrategyProfileBasic implements StrategyProfile {
                 fd = edemamManager;
                 break;
             default:
-                throw new IllegalArgumentException("Unknown database name. dbName argument:" + dbName);
+                throw new IllegalArgumentException("Unknown database name:" + dbName);
         }
-        apiRestrictionService.increment(fd.getDbName(), Food.class, queryType);
+        apiRestrictionService.increment(fd.getDbName(), Food.class, queryTypes);
 
         if (log.isDebugEnabled()) {
             log.debug("Choosed database:{}. Current counter status:", fd.getDbName());
-            for (int qt : queryType) {
+            for (int qt : queryTypes) {
                 log.debug("{}", apiRestrictionService.getCurrentValues(dbName, Food.class, qt));
             }
         }
@@ -59,21 +61,20 @@ public class StrategyProfileBasic implements StrategyProfile {
         return fd;
     }
 
-
     @Override
-    public FoodDispatcher getFoodDispatcher(int[] queryType) {
+    public FoodDispatcher getFoodDispatcher(int[] queryTypes) {
         FoodDispatcher fd;
 
-        if (apiRestrictionService.isRestrictionReached(NUTRITIONIX_DB_NAME, Food.class, queryType))
+        if (apiRestrictionService.isRestrictionReached(NUTRITIONIX_DB_NAME, Food.class, queryTypes))
             fd = localDatabaseManager;
         else {
             fd = nutritionixManager;
-            apiRestrictionService.increment(fd.getDbName(), Food.class, queryType);
+            apiRestrictionService.increment(fd.getDbName(), Food.class, queryTypes);
         }
 
         if (log.isDebugEnabled()) {
             log.debug("Choosed database:{}. Current counter status:", fd.getDbName());
-            for (int qt : queryType) {
+            for (int qt : queryTypes) {
                 log.debug("{}", apiRestrictionService.getCurrentValues(fd.getDbName(), Food.class, qt));
             }
         }
@@ -82,19 +83,19 @@ public class StrategyProfileBasic implements StrategyProfile {
     }
 
     @Override
-    public RecipesDispatcher getRecipesDispatcher(int[] queryType) {
+    public RecipesDispatcher getRecipesDispatcher(int[] queryTypes) {
         RecipesDispatcher rd;
 
-        if (apiRestrictionService.isRestrictionReached(EDEMAM_DB_NAME, Recipe.class, queryType))
+        if (apiRestrictionService.isRestrictionReached(EDEMAM_DB_NAME, Recipe.class, queryTypes))
             rd = edemamManager;
         else {
             rd = localDatabaseManager;
-            apiRestrictionService.increment(rd.getDbName(), Recipe.class, queryType);
+            apiRestrictionService.increment(rd.getDbName(), Recipe.class, queryTypes);
         }
 
         if (log.isDebugEnabled()) {
             log.debug("Choosed database:{}. Current counter status:", rd.getDbName());
-            for (int qt : queryType) {
+            for (int qt : queryTypes) {
                 log.debug("{}", apiRestrictionService.getCurrentValues(rd.getDbName(), Recipe.class, qt));
             }
         }

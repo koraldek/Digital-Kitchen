@@ -1,55 +1,49 @@
 package pl.krasnowski.DigitalKitchen.services.diet;
 
 import org.springframework.stereotype.Service;
-import pl.krasnowski.DigitalKitchen.model.domain.diet.DietDay;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.Meal;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Consumable;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Dish;
-import pl.krasnowski.DigitalKitchen.model.domain.user.User;
+import pl.krasnowski.DigitalKitchen.model.domain.food.FoodWrapper;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public interface FoodLogger {
 
     /**
-     * Log food to current user diary. Creates new meal.
-     *
-     * @param food consumed food
-     * @param date date of dietDay
-     */
-    void logFood(Consumable food, Timestamp date, User user);
-
-    /**
      * Log food to user's diary and add food to existing meal.
      *
-     * @param food consumed food
-     * @param meal meal to bind food with
+     * @param food     consumed food
+     * @param date     date and time of meal
+     * @param mealName meal to bind food with
      */
-    void logFood(Consumable food, DietDay dietDay, Meal meal);
+    void logFood(FoodWrapper food, LocalDateTime date, String mealName);
 
     /**
-     * Log meal to user dairy.
+     * Logs food to existing meal or create new one.
      *
-     * @param meal created meal
+     * @param dishes   ingredients of meal
+     * @param date     date and time of meal
+     * @param mealName meal to bind food with
      */
-    void logMeal(Meal meal);
+    void logMeal(List<FoodWrapper> dishes, LocalDateTime date, String mealName);
 
-
-    void updateMeal(Meal oldMeal, Meal updatedMeal);
+    void updateMeal(String oldMealName, Meal updatedMeal);
 
     void updateDish(Meal meal, Dish dish);
 
+    /**
+     * @param food     to remove
+     * @param date     date of diary day
+     * @param mealName where particular food occurs
+     */
+    void removeFromLog(FoodWrapper food, LocalDate date, String mealName);
 
     /**
-     * @param food to remove
-     * @param meal where particular food occurs
+     * Removes meal from log.
      */
-    void removeFromLog(Consumable food, Meal meal);
-
-
-    /**
-     * Removes whole meal from log.
-     */
-    void removeFromLog(Meal meal);
+    void removeFromLog(LocalDate date, String mealName);
 }

@@ -35,7 +35,7 @@ public class ShoppingListItem implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL)
     private User orderedBy;
 
-    String additionalMessage = "";
+    String additionalMessage;
 
     public String getChefDecision() {
         if (acceptedByChef == 0)

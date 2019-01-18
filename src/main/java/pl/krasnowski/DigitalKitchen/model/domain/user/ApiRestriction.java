@@ -26,6 +26,14 @@ public class ApiRestriction {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<RestrictionPiece> restrictionsMap;
 
+    @Override
+    public String toString() {
+        return "ApiRestriction{" +
+                "ID=" + apiRestrictionID +
+                ", dbName='" + dbName + '\'' +
+                ", restrictionsMap=" + restrictionsMap +
+                '}';
+    }
 
     public ApiRestriction() {
         restrictionsMap = new HashSet<>();

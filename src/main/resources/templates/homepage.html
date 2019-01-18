@@ -1,28 +1,34 @@
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>Welcome to Digital Kitchen</title>
+    <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
+    <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>
+
     <link rel="icon" href="../static/img/favicon.jpg" th:href="@{/img/favicon.jpg}"/>
-    <link rel="stylesheet" type="text/css" href="../static/css/homepage.css" th:href="@{/css/homepage.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/homepage.css" th:href="@{/css/homepage.css}"/>
+
+    <link rel="stylesheet" type="text/css" href="../../resources/static/css/jquery-clockpicker.min.css"
+          th:href="@{css/jquery-clockpicker.min.css}"/>
+    <link rel="stylesheet" type="text/css" href="../../resources/static/css/bootstrap-formhelpers.min.css"
+          th:href="@{/css/bootstrap-formhelpers.min.css}"/>
 </head>
 <div th:replace="fragments/layout :: imports"></div>
 
 <body>
-<header th:replace="${@user.username != null} ?
-                      ~{fragments/layout       :: site-header} :
-                      ~{fragments/layout-guest :: site-header
-                     }">
+<header th:replace="fragments/layout :: site-header">
     Unprocessed main page
 </header>
 
 
 <div class="container">
 
-    <div class="row">
-
+    <div class="row mt-1 pad">
         <div class="col-lg-6">
-            <div id="search-header">
-                <span class="search-header-block" th:text="#{select-search-type}">Select what you want to find: </span>
+            <div id="search-header" class="row">
+                <span class="search-header-block text-success" th:text="#{select-search-type}"
+                      style="font-weight: bold">Select what you want to find: </span>
                 <div class="search-header-block-active">
                     <a href="#" th:text="#{food}">Food</a>
                 </div>
@@ -40,80 +46,308 @@
                 </div>
             </div>
 
-            <div class="pad">
-                <div class="d-inline-block">
-                    <h4 th:text="#{find-food}" class="d-inline-block">Find food:</h4>
-                    <input class="d-inline-block" title="Enter food name" type="text" id="searchInput" value="">
-                    <input type="button" onclick="showResults();" value="Show results">
+            <div class="row mt-1">
+                <h3 th:text="#{find-food}" class="d-inline-block m-1 text-success">Find food:</h3>
+                <input class="" title="Enter food name" type="text" id="searchInput" value=""/>
+                <input class="btn-success" type="button" id="search-button" onclick="showResults();"
+                       th:value="#{search}"
+                       value="search"/>
+                <span class="ml-2 text-danger" style="display: none;" id="search-warning-span"
+                      th:text="#{too-short-keyword}">keyword should have at least 3 characters</span>
+            </div>
+
+            <div class="row mt-2  col-10" id="translator">
+                <span th:text="#{translate-from} +':'" style="font-weight: bold">translate to english from:</span>
+                <select class="ml-1 btn-success badge-light">
+                    <option th:text="#{dont-translate}">don't translate</option>
+                    <option th:text="#{polish}">Polish</option>
+                </select>
+            </div>
+
+
+            <form>
+                <div class="form-group row mt-2">
+                    <label for="all" class="col-3 col-form-label " style="font-weight: bold" th:text="#{choose-source}">Choose source</label>
+                    <span class="button-checkbox">
+                        <button type="button" class="btn mr-1 " data-color="success" id="all" th:text="#{all}"
+                                onchange="toggleAll(this);">All</button>
+                        <input type="checkbox" style="display: none;"/>
+                    </span>
+                    <span class="button-checkbox">
+                        <button type="button" class="btn mr-1 " name="food-source" data-color="success" th:text="#{kitchen}"
+                        >Kitchen</button>
+                        <input type="checkbox" style="display: none;"/>
+                    </span>
+                    <span class="button-checkbox">
+                        <button type="button" class="btn mr-1 " name="food-source" data-color="success"
+                                th:text="#{shopping-list}">shopping list</button>
+                        <input type="checkbox" style="display: none;"/>
+                    </span>
+                    <span class="button-checkbox">
+                        <button type="button" class="btn  mr-1" name="food-source" data-color="success"
+                                th:text="#{diet-schedule}">diet schedule</button>
+                        <input type="checkbox" style="display: none;"/>
+                    </span>
+
                 </div>
 
-                <div>
-                    <form class="d-inline-block">
-                        <span class="d-inline-block" style="font-weight: bold"
-                              th:text="#{choose-source}">Choose source</span>:
-                        <div class="d-inline-block">
-                            <label class="checkbox-inline mr-1" id="select-all" onchange="toggleAll(this);" >
-                                <span th:text="#{all}">all</span>
-                                <input type="checkbox" checked>
-                            </label>
-                            <label class="checkbox-inline mr-1">
-                                <span th:text="#{kitchen}">kitchen</span>
-                                <input type="checkbox" name="source" checked >
-                            </label>
-                            <label class="checkbox-inline mr-1">
-                                <span th:text="#{shopping-list}">shopping list</span>
-                                <input type="checkbox" name="source" checked>
-                            </label>
-                            <label class="checkbox-inline mr-1" >
-                                <span th:text="#{diet-schedule}">diet schedule</span>
-                                <input type="checkbox" name="source" checked>
-                            </label>
+                <div class="form-group row">
+                    <label class="col-3 col-form-label"
+                           th:text="#{select-type}" style="font-weight: bold">Select type:</label>
+
+                    <span class="button-checkbox">
+                        <button type="button" class="btn mr-1" data-color="success" id="product-chck"
+                                value="product">product</button>
+                        <input type="checkbox" style="display: none;"/>
+                    </span>
+                    <span class="button-checkbox">
+                        <button type="button" class="btn mr-1" data-color="success" id="common-chck" name="common"
+                                th:text="#{common}">common</button>
+                        <input type="checkbox" style="display: none;"/>
+                    </span>
+                    <span class="button-checkbox">
+                        <button type="button" class="btn mr-1" name="branded" data-color="success"
+                                th:text="#{branded}">branded</button>
+                        <input type="checkbox" style="display: none;"/>
+                    </span>
+                    <span class="button-checkbox">
+                        <button type="button" class="btn mr-1" name="own" data-color="success"
+                                th:text="#{own}">own</button>
+                        <input type="checkbox" style="display: none;"/>
+                    </span>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-3 col-form-label " th:text="#{exclude-intolerances}" style="font-weight: bold;"
+                           for="exclude-intolerances">Exclude intolerances</label>
+                    <span class="button-checkbox">
+                        <button type="button" class="btn mt-2" name="exclude-intolerances" data-color="success"
+                                th:text="#{exclude}">Exclude</button>
+                        <input type="checkbox" style="display: none;" checked id="exclude-intolerances"/>
+                    </span>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-3 col-form-label" th:text="#{more-parameters}" style="font-weight: bold">
+                        More parameters:</label>
+                    <span class="button-checkbox mr-1">
+                        <button type="button" class="btn " name="high-protein" data-color="success"
+                                th:text="#{high-protein}">high protein</button>
+                        <input type="checkbox" style="display: none;" checked id="high-protein"/>
+                    </span>
+                    <span class="button-checkbox mr-1">
+                        <button type="button" class="btn " name="high-protein" data-color="success"
+                                th:text="#{low-fat}">low fat</button>
+                        <input type="checkbox" style="display: none;" checked id="low-fat"/>
+                    </span>
+                    <span class="button-checkbox mr-1">
+                        <button type="button" class="btn " name="high-protein" data-color="success"
+                                th:text="#{no-meat}">no meat</button>
+                        <input type="checkbox" style="display: none;" checked id="no-meat"/>
+                    </span>
+
+                </div>
+            </form>
+
+
+        </div>
+
+        <div class="col-lg-6 pad">
+            <h4 th:text="#{result} + ':'">Result:</h4>
+
+            <div id="results">
+                <div class="list-group" id="result-tab" role="tablist">
+                    <h6 style="color: #734d52" th:text="#{enter-name-to-get-result}">Enter item name to get results</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row pad my-2">
+        <div id="detailed" class="col-xs-9 col-md-5">
+            <span style="color: #017c0e;" th:text="#{detailed-info-about-selected-item}">Detailed information about selected item</span>
+            <div class="tab-content" id="result-tab-content" th:text="#{select-to-get-detailed-info}">Select on item to
+                get detailed information
+            </div>
+
+            <div class="row" id="energy-container" style="display:none;">
+                <h5 class="text-success" th:text="#{energy}">Energy</h5>
+                <span class="text-danger font-weight-bold" id="energy-value">300 kCal</span>
+            </div>
+        </div>
+
+        <div id="chartContainer"
+             class="canvasjs-chart-container col-s-2 col-md-4 mt-lg-3 m-md-4 d-inline-block align-content-center"
+             style="height:210px; ;float:right; margin:0; padding:0;"></div>
+    </div>
+
+    <div class="row pad">
+
+        <div class=" col-xs-4 col-3">
+            <h6 th:text="#{choose-food-destination}" class="text-success"> Choose where you want to add food:</h6>
+
+            <div id="save-destinations">
+                <button id="btn-diary" class=" btn-primary btn-sm btn-block mt-3" type="button" data-toggle="collapse"
+                        onclick="setTimeToNow()" data-target="#food-diary-form" aria-expanded="false"
+                        aria-controls="food-diary-form" th:text="food-diary">
+                    food diary
+                </button>
+
+                <button id="btn-meal" class="btn-primary btn-sm btn-block mt-3" type="button" data-toggle="collapse"
+                        data-target="#meal-schedule-form" aria-expanded="false" th:text="#{meal-schedule}">
+                    meals schedule
+                </button>
+
+                <button id="btn-sh-list" class=" btn-primary btn-sm btn-block mt-3" type="button" data-toggle="collapse"
+                        data-target="#shopping-list-form" aria-expanded="false" aria-controls="shopping-list-form"
+                        th:text="#{shopping-list}">
+                    shopping list
+                </button>
+
+                <button id="btn-stock" class=" btn-primary btn-sm btn-block mt-3" type="button" data-toggle="collapse"
+                        data-target="#kitchen-stock-form" aria-expanded="false" aria-controls="kitchen-stock-form"
+                        th:text="#{kitchen-stock}">
+                    kitchen stock
+                </button>
+
+                <button id="btn-orders" class=" btn-primary btn-sm btn-block mt-3 mb-3" type="button" data-toggle="collapse"
+                        data-target="#kitchen-orders-form" aria-expanded="false" aria-controls="kitchen-orders-form"
+                        th:text="#{kitchen-orders}">
+                    kitchen orders
+                </button>
+            </div>
+        </div>
+
+        <div class="col-m-11">
+
+            <div id="common-form">
+                <span class="d-inline text-success" th:text="#{enter-quantity}">Enter quantity:</span>
+                <select class="d-inline" name="serving_unit" id="serving_unit"
+                        onchange="updateDetails();">
+                    <option selected="selected" value="grams">gram</option>
+                    <option value="pocket">pocket</option>
+                    <option value="link">link</option>
+                </select>
+                <input class="d-inline" name="serving_size" id="serving_size" style="width: 80px" type="number"
+                       maxlength="5" oninput="if (this.value.length > this.maxLength)
+                           this.value = this.value.slice(0, this.maxLength); updateDetails()"/>
+
+            </div>
+
+            <div class="collapse" id="food-diary-form">
+                <div class="card card-body" >
+                    <h6 class="text-success" th:text="#{food-logger-form}">Food logger form:</h6>
+
+                    <form>
+                        <div class="form-group row">
+                            <label for="diary-time" class="col-2 col-form-label" th:text="#{time}">Time</label>
+                            <input class="btn-sm btn-success d-inline-block" style="height: 30px;" type="button"
+                                   value="now" onclick="setTimeToNow()">
+                            <div class="col-sm-1 pr-5 d-inline-block">
+                                <input autocomplete="off" id="diary-time" style="height: 37px; width: 50px;">
+                            </div>
+                            <div id="diary-date" class="col-sm-4 bfh-datepicker " data-format="d-m-y" data-date="today">
+                            </div>
+
+                        </div>
+                        <div class="form-group row">
+                            <span class="col-sm-2" th:text="#{meal}">Meal</span>
+                            <div class="col-sm-10 m-0 p-0">
+                                <div id="diary-meal" class="btn-group btn-group-toggle btn-group-sm"
+                                     data-toggle="buttons">
+                                    <label id="breakfast" class="btn btn-sm  btn-success p-1">
+                                        <input type="radio" name="dest-meal" id="option1" autocomplete="off"
+                                               value="breakfast"/>
+                                        <span th:text="#{breakfast}">Breakfast</span>
+                                    </label>
+
+                                    <label id="snack" class="btn btn-success p-1">
+                                        <input type="radio" name="dest-meal" id="option2" autocomplete="off"
+                                               value="snack" />
+                                        <span th:text="#{snack}">Snack</span>
+                                    </label>
+
+                                    <label id="lunch" class="btn btn-success p-1">
+                                        <input type="radio" name="dest-meal" id="option3" autocomplete="off"
+                                               value="lunch" />
+                                        <span th:text="#{lunch}">Lunch</span>
+                                    </label>
+
+                                    <label id="dinner" class="btn btn-success p-1">
+                                        <input type="radio" name="dest-meal" id="option4" autocomplete="off"
+                                               value="dinner" />
+                                        <span th:text="#{dinner}">Dinner</span>
+                                    </label>
+
+                                    <label id="supper" class="btn btn-success p-1">
+                                        <input type="radio" name="dest-meal" id="option5" autocomplete="off"
+                                               value="supper"/>
+                                        <span th:text="#{supper}">Supper</span>
+                                    </label>
+                                    <label id="new" class="btn btn-secondary p-1">
+                                        <input disabled type="radio" name="dest-meal" id="option6" autocomplete="off"
+                                               value="new"/>
+                                        <span th:text="#{new} + '[+]'">new [+]</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <input class="btn btn-success" type="button" onclick="logFood();" value="Log food"
+                                       style="display:table; margin:0 auto; margin-top:5px;"/>
+                            </div>
+                            <h6 class="text-secondary mt-2" id="logged-success" style="display:none; margin:0 auto;"
+                                th:text="#{added-to-diary}">
+                                Successfully added to diary</h6>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-6">
-            <div class="pad">
-                <h3 th:text="#{result}">Result</h3>
 
-                <div id="results">
-                    <div class="col-9">
-                        <div class="list-group" id="result-tab" role="tablist">
-                            <h6 style="color: #734d52" th:text="#{enter-name-to-get-result}">Enter item name to get results</h6>
-                        </div>
-                    </div>
+            <div class="collapse" id="meal-schedule-form">
+                <div class="card card-body">
+                    meal schedule form
+                </div>
+            </div>
+
+            <div class="collapse" id="shopping-list-form">
+                <div class="card card-body">
+                    shopping list form
+                </div>
+            </div>
+
+            <div class="collapse" id="kitchen-stock-form">
+                <div class="card card-body">
+                    kitchen stock form
+                </div>
+            </div>
+
+            <div class="collapse" id="kitchen-orders-form">
+                <div class="card card-body">
+                    kitchen orders form
                 </div>
             </div>
 
         </div>
-
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="pad">
-                    <div id="detailed">
-                        <h5 th:text="#{detailed-info-about-selected-item}">Detailed information about selected item</h5>
-                        <div class="tab-content" id="result-tab-content" th:text="#{select-to-get-detailed-info}">Select on item to get detailed information</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
+
 </div>
 
-<h1 th:text="#{greetings}">Welcome</h1>
-<p th:text="#{welcome-to-dk}">Welcome to the Digital Kitchen system.</p>
-
-
-
-<footer th:replace="fragments/layout :: site-footer"></footer>
 
 
 <div id="import-scripts">
+    <script type="text/javascript" src=".././static/js/bootstrap-formhelpers.min.js"
+            th:src="@{/js/bootstrap-formhelpers.min.js}"></script>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+    <script type="text/javascript" src=".././static/js/jquery-clockpicker.min.js"
+            th:src="@{/js/jquery-clockpicker.min.js}"></script>
+
     <script type="text/javascript" src=".././static/js/homepage.js" th:src="@{/js/homepage.js}"></script>
 </div>
+<footer th:replace="fragments/layout :: site-footer"></footer>
 
 </body>
 </html>

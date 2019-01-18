@@ -1,19 +1,15 @@
 package pl.krasnowski.DigitalKitchen.services.foodDbManager.nutritionix;
 
+import org.apache.commons.math3.util.Precision;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import pl.krasnowski.DigitalKitchen.config.FoodSystemConfig;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Food;
-import pl.krasnowski.DigitalKitchen.model.domain.food.FoodProxy;
-import pl.krasnowski.DigitalKitchen.model.domain.food.Nutrient;
-import pl.krasnowski.DigitalKitchen.model.domain.food.Origin;
+import pl.krasnowski.DigitalKitchen.model.domain.food.*;
 import pl.krasnowski.DigitalKitchen.services.foodDbManager.DatabaseManager;
 
 import java.util.ArrayList;
 import java.util.function.Function;
-
-import static pl.krasnowski.DigitalKitchen.services.foodDbManager.DatabaseManager.NUTRITIONIX_DB_NAME;
 
 
 interface NutritionixParser {
@@ -64,41 +60,63 @@ interface NutritionixParser {
             foodProxy.setPhoto(DatabaseManager.DEFAULT_FOOD_PHOTO_URL);
         else
             foodProxy.setPhoto(inputObject.getPhoto());
+
         foodProxy.setDbName(DatabaseManager.NUTRITIONIX_DB_NAME);
         foodProxy.setFoodID(inputObject.getFoodID());
         foodProxy.setOrigin(Origin.valueOf(
                 inputObject.getClass().getSimpleName().toUpperCase()));
-
+        foodProxy.setFoodType("Food");
         return foodProxy;
     };
 
     Function<IFood, Food> foodParser = (IFood inputObject) -> {
+        int servingWeightGrams;
         Food food = new Food();
-        food.addName("English", inputObject.getName());
+        log.debug("Parsing food:{}", inputObject.toString());
+
+        /* NAME AND PHOTO */
+        food.addName("en", inputObject.getName());
         if (StringUtils.isEmpty(inputObject.getPhoto()) || inputObject.getPhoto().equals(NutritionixManager.DEFAULT_EXTERNAL_PHOTO_URL))
             food.setPhoto(DatabaseManager.DEFAULT_FOOD_PHOTO_URL);
         else
             food.setPhoto(inputObject.getPhoto());
 
-        food.addForeignID(DatabaseManager.NUTRITIONIX_DB_NAME, inputObject.getFoodID());
-        for (FullNutrient n : inputObject.getFullNutrients()) {
-            if (n.value >= 0.0001) { // ignore ~0 values
-                Nutrient nutrient = FoodSystemConfig.getNutrientsList().stream().filter( // compare id with one in nutrientsList and convert to Nutrient object
-                        nutr -> n.attrId == Long.valueOf(
-                                nutr.getDbTags().get(NUTRITIONIX_DB_NAME)))
-                        .findFirst().orElse(null);
-
-                food.addNutrient(nutrient, n.value);
-            }
-        }
-        if (inputObject.getAltMeasures() != null) {
+        /* SERVING SIZES */
+        if (inputObject.getAltMeasures() != null)
             for (AltMeasure am : inputObject.getAltMeasures()) {
-                food.addServingSize(am.measure, am.servingWeight);
+                food.addServingSize(Unit.getEnum(am.getMeasure()), am.getServingWeight());
+            }
+
+        servingWeightGrams = inputObject.getServingWeightGrams();
+        if (servingWeightGrams == 0) {
+            servingWeightGrams = food.getServingSizes().getOrDefault(Unit.G, 1);
+        }
+
+        if (!inputObject.getPrimaryServingMeasure().getMeasure().contains("gram"))
+            food.addServingSize(
+                    Unit.getEnum(inputObject.getPrimaryServingMeasure().getMeasure()),
+                    inputObject.getPrimaryServingMeasure().getQty());
+
+        /* ID */
+        food.addForeignID(DatabaseManager.NUTRITIONIX_DB_NAME, inputObject.getFoodID());
+        /* NUTRIENTS */
+        for (FullNutrient n : inputObject.getFullNutrients()) {
+            if (n.getValue() >= 0.0001) { // ignore ~0 values
+                Nutrient nutrient = null;
+                for (Nutrient nut : Nutrient.values())
+                    if (nut.getTag() == n.getAttrId())
+                        nutrient = nut;
+
+                if (nutrient == null)
+                    throw new IllegalArgumentException("Required nutrient ID=" + n.getAttrId() + " not found in nutrients list.");
+
+                double quantity = Precision.round(n.getValue() / servingWeightGrams, 4);// trim to 4 digits
+                food.addNutrient(new NutrientWrapper(nutrient, quantity));
             }
         }
-        food.addServingSize("grams", inputObject.getServingGramsWeight());
-
-        if (inputObject instanceof Branded || inputObject instanceof pl.krasnowski.DigitalKitchen.services.foodDbManager.nutritionix.Food) // ...nutritionix.Food comes from parseSearchByKeywordOrID
+        /* ORIGIN */
+        if (inputObject instanceof Branded ||
+                inputObject instanceof pl.krasnowski.DigitalKitchen.services.foodDbManager.nutritionix.Food) // ...nutritionix.Food comes from parseSearchByKeywordOrID
             food.addOrigin(Origin.BRANDED);
         else if (inputObject instanceof Common)
             food.addOrigin(Origin.COMMON);

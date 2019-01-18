@@ -19,14 +19,13 @@ public class DietNutrient {
     @Column(name = "diet_nutrient_id")
     private long dietNutrientID;
 
-    @JoinTable(name = "nutrientID")
+    @JoinTable(name = "nutrient_ID")
     private Nutrient nutrient;
 
     /**
-     * Period of dietDay in days.
+     * Period of foodAndWorkoutDiary in days.
      */
     private int period = 1;
-
 
     /**
      * Amount of nutrient in grams.

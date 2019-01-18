@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:sec="http://www.w3.org/1999/xhtml"
       xsi:schemaLocation="http://www.thymeleaf.org ">
 <head>
     <meta charset="UTF-8"/>
@@ -28,19 +29,18 @@
                 <li class="nav-item">
                     <a class="nav-link menu-icon" href="../homepage.html" th:href="@{/}">
                         <img src="../../static/img/layout/dark-theme/homepage.png"
-                             th:src="@{/img/layout/dark-theme/homepage.png}">
-                        <span th:text="#{homepage}"> Homepage</span>
+                             th:src="@{/img/layout/dark-theme/homepage.png}"/>
+                        <span th:text="#{homepage}">Homepage</span>
                     </a>
                 </li>
 
 
                 <li class="nav-item">
-                    <a class="nav-link menu-icon" href="../my-profile.html" th:href="@{todo...}">
+                    <a class="nav-link menu-icon" href="../my-profile.html" th:href="@{/personalization/update}">
                         <img class="nav-link" id="profile-picture" src="../../static/img/default-profile-female.png"
-                             th:src="${@user.sex != null &&
-                         @user.sex == T(pl.krasnowski.DigitalKitchen.model.domain.user.Sex).male ?
+                             th:src="${ @user.sex == T(pl.krasnowski.DigitalKitchen.model.domain.user.Sex).MALE ?
                          '/img/default-profile-male.png' : '/img/default-profile-female.png'}">
-                        <span th:text="${@user.username == null ? 'Maria' : @user.username}">Anna</span>
+                        <span sec:authentication="name">Anna</span>
                     </a>
 
                 <li class="nav-item">
@@ -60,7 +60,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link menu-icon" href="../diet/current.html" th:href="@{/diet/}">
+                    <a class="nav-link menu-icon" href="../diet/current.html" th:href="@{api/diets/current}">
                         <img src="../../static/img/layout/dark-theme/diet.png"
                              th:src="@{/img/layout/dark-theme/diet.png}">
                         <span th:text="#{diet}">Diet</span>
@@ -109,26 +109,26 @@
             </ul>
 
             <!--Right side of navbar-->
-            <ul class="nav navbar-nav mr-auto navbar-right">
-                <li class="nav-item menu-icon" th:if="${@user != null && @user.getUsername() != null}">
-                        <select class="btn bg-warning menu-icon locales">
-                            <option th:text="${param.lang} ? ${param.lang} : 'language'">EN</option>
-                            <option value="EN">English</option>
-                            <option value="PL">Polski</option>
-                        </select>
+            <ul class="nav navbar-nav  navbar-right mb-3 mr-4">
+                <li class="nav-item menu-icon">
+                    <select class="btn bg-warning menu-icon locales">
+                        <option th:text="${param.lang} ? ${param.lang} : 'language'">EN</option>
+                        <option value="EN">English</option>
+                        <option value="PL">Polski</option>
+                    </select>
                 </li>
 
-                <li class="nav-item menu-icon" id="logged-in-info" th:if="${@user != null && @user.getUsername() != null }">
+                <li sec:authorize="isAuthenticated()" class="nav-item menu-icon mx-2" id="logged-in-info">
                     <form method="POST" th:action="@{/logout}">
                         <input class="bg-warning menu-icon btn" type="submit" th:value="#{logout}" value="Logout"/>
                     </form>
                 </li>
-                <li class="nav-item menu-icon" th:unless="${@user != null && @user.getUsername() != null }">
-                    <a href="../login.html" th:href="@{/login}" style="color:inherit; text-decoration: none; margin: 2px">
-                        <span class="btn bg-warning menu-icon locales" th:text="#{login}" >Log in</span>
-                    </a>
+                <li sec:authorize="isAnonymous()" class="nav-item menu-icon">
+                <a href="../login.html" th:href="@{/login}"
+                style="color:inherit; text-decoration: none; margin: 2px">
+                <span class="btn bg-warning menu-icon locales" th:text="#{login}">Log in</span>
+                </a>
                 </li>
-
             </ul>
 
         </div>

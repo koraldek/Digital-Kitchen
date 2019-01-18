@@ -3,6 +3,7 @@ package pl.krasnowski.DigitalKitchen.services.foodDbManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import pl.krasnowski.DigitalKitchen.model.DAO.FoodDAO;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Food;
 import pl.krasnowski.DigitalKitchen.model.domain.food.FoodProxy;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Recipe;
@@ -24,6 +25,10 @@ public class DatabaseManagerImpl implements DatabaseManager {
     @Autowired
     private StrategyProfile strategyProfile;
 
+    @Autowired
+    FoodDAO foodDAO;
+
+
     @Override
     public void setStrategyProfile(StrategyProfile strategyProfile) {
         this.strategyProfile = strategyProfile;
@@ -34,15 +39,24 @@ public class DatabaseManagerImpl implements DatabaseManager {
      */
     @Override
     public Food getFoodByID(String foodID, String dbName) {
-        log.debug("Running database manager with parameters: \n foodID:{}\n dbName:{}", foodID, dbName);
-        return strategyProfile
-                .getDbFoodManager(dbName, new int[]{ALL_QUERY_TYPES, FOOD_QUERY_TYPE})
-                .getFoodByID(foodID);
+        log.debug("Running database manager with parameters: foodID:{}, dbName:{}", foodID, dbName);
+
+        Food food = foodDAO.findByForeignID(dbName, foodID);
+        if (food == null) {
+            food = strategyProfile
+                    .getDbFoodManager(dbName, new int[]{ALL_QUERY_TYPES, FOOD_QUERY_TYPE})
+                    .getFoodByID(foodID);
+            if (food != null) {
+                foodDAO.save(food);
+                log.debug("Saved new food to local database:{}", food.getName());
+            }
+        }
+        return food;
     }
 
     @Override
     public ArrayList<FoodProxy> getAutocompleteFoodList(String keyword, Map<String, String> paramMap) {
-        log.debug("Running database manager with parameters: \n keyword:{}\n paramMap:{}", keyword, paramMap);
+        log.debug("Running database manager with parameters: keyword:{}, paramMap:{}", keyword, paramMap);
         return strategyProfile
                 .getFoodDispatcher(new int[]{ALL_QUERY_TYPES, FOOD_QUERY_TYPE, AUTOCOMPLETE_QUERY_TYPE})
                 .getAutocompleteFoodList(keyword, paramMap);
@@ -50,14 +64,12 @@ public class DatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public ArrayList<FoodProxy> getAutocompleteFoodList(String keyword) {
-        log.debug("Running database manager with parameters: \n keyword:{}}", keyword);
         return getAutocompleteFoodList(keyword, null);
     }
 
-
     @Override
     public ArrayList<Food> getFoodList(String keyword, Map<String, String> paramMap) {
-        log.debug("Running database manager with parameters: \n keyword:{}\n paramMap:{}", keyword, paramMap);
+        log.debug("Running database manager with parameters: keyword:{}, paramMap:{}", keyword, paramMap);
         return strategyProfile
                 .getFoodDispatcher(new int[]{ALL_QUERY_TYPES, FOOD_QUERY_TYPE})
                 .getFoodList(keyword, paramMap);
@@ -65,7 +77,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
 
     @Override
     public ArrayList<Food> getFoodList(String keyword) {
-        log.debug("Running database manager with parameters: \n keyword:{}", keyword);
+        log.debug("Running database manager with parameters: keyword:{}", keyword);
         return getFoodList(keyword, null);
     }
 
@@ -80,7 +92,7 @@ public class DatabaseManagerImpl implements DatabaseManager {
      */
     @Override
     public List<Recipe> getAutocompleteRecipeList(String keyword, Map<String, String> paramMap) {
-        log.debug("Running database manager with parameters: \n keyword:{}, paramMap:{}", keyword, paramMap);
+        log.debug("Running database manager with parameters: keyword:{}, paramMap:{}", keyword, paramMap);
         return strategyProfile
                 .getRecipesDispatcher(new int[]{ALL_QUERY_TYPES, RECIPE_QUERY_TYPE, AUTOCOMPLETE_QUERY_TYPE})
                 .getAutocompleteRecipeList(keyword, paramMap);

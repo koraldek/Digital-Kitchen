@@ -59,7 +59,7 @@ public interface DatabaseManager {
 
     /**
      * @param keyword  part of recipe name
-     * @param paramMap Map of additional parameters: max kcal, diet labels
+     * @param paramMap Map of additional parameters: max KCAL, diet labels
      */
     List<Recipe> getRecipeList(String keyword, Map<String, String> paramMap);
 }

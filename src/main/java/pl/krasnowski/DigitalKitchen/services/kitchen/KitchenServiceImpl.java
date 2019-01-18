@@ -25,21 +25,22 @@ public class KitchenServiceImpl implements KitchenService {
 
     @Override
     public Set<Consumable> getStock() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Consumable findInStock(Consumable consumable) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void addItemToStock(Consumable consumable) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void removeItemFromStock(Consumable consumable) {
+        throw new UnsupportedOperationException();
     }
 
 
@@ -55,13 +56,13 @@ public class KitchenServiceImpl implements KitchenService {
 
     @Override
     public void changeKitchen(Kitchen kitchen, User user) {
-
+        throw new UnsupportedOperationException();
     }
 
 
     @Override
     public Set<ShoppingListItem> getShoppingList() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -80,21 +81,21 @@ public class KitchenServiceImpl implements KitchenService {
 
     @Override
     public void addOrder(Dish dish) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Dish getOrder(long id) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Set<Dish> getOrders() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void removeOrder(Dish dish) {
-
+        throw new UnsupportedOperationException();
     }
 }

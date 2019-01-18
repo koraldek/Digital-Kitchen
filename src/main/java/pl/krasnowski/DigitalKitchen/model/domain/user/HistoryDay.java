@@ -7,11 +7,13 @@ import pl.krasnowski.DigitalKitchen.model.domain.diet.Meal;
 import pl.krasnowski.DigitalKitchen.model.domain.physicalActivity.PhysicalActivity;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.sql.Timestamp;
 
 @Component
 @Entity
 @Data
-@Table(name = "history_days")
+@Table(name = "history_day")
 public class HistoryDay {
 
     @Id
@@ -28,22 +30,26 @@ public class HistoryDay {
     private String pictureOfDay;
 
     @JoinColumn(name = "diet_day_ID")
-    private DietDay dietDay;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private DietDay foodAndWorkoutDiary;
 
+    public Timestamp getDayDate() {
+        return foodAndWorkoutDiary.getDayDate();
+    }
 
     public void addMeal(Meal meal) {
-        dietDay.addMeal(meal);
+        foodAndWorkoutDiary.addMeal(meal);
     }
 
     public void removeMeal(Meal meal) {
-        dietDay.removeMeal(meal);
+        foodAndWorkoutDiary.removeMeal(meal);
     }
 
     public void addPhysicalActivity(PhysicalActivity pa) {
-        this.dietDay.getWorkouts().add(pa);
+        this.foodAndWorkoutDiary.getWorkout().add(pa);
     }
 
     public void removePhysicalActivity(PhysicalActivity pa) {
-        this.dietDay.getWorkouts().remove(pa);
+        this.foodAndWorkoutDiary.getWorkout().remove(pa);
     }
 }

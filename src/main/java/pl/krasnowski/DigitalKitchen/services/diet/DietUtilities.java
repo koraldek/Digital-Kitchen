@@ -6,11 +6,14 @@ import pl.krasnowski.DigitalKitchen.model.domain.diet.DietType;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.Meal;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Consumable;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Dish;
+import pl.krasnowski.DigitalKitchen.model.domain.food.FoodWrapper;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Nutrient;
 import pl.krasnowski.DigitalKitchen.model.domain.user.Intolerance;
+import pl.krasnowski.DigitalKitchen.model.domain.user.Sex;
 import pl.krasnowski.DigitalKitchen.model.domain.user.Silhouette;
 import pl.krasnowski.DigitalKitchen.model.domain.user.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,13 +24,12 @@ public interface DietUtilities {
      *
      * @return diet for desired silhouette for current user.
      */
-    Diet computeDiet(DietType dietType, int physicalActivity);
-
+    Diet computeDiet(DietType dietType, int physicalActivity, Sex sex, int height, int weight, int age);
 
     /**
      * Method used by dietetics to generate diet.
      *
-     * @param user              data to compute diet
+     * @param user data to compute diet
      * @param desiredSilhouette to achieve with this diet
      * @return diet for desired silhouette.
      */
@@ -42,9 +44,7 @@ public interface DietUtilities {
      */
     double calculateBMI(double weight, double height);
 
-
     boolean isAllergicTo(Intolerance intolerance);
-
 
     /**
      * Used to propose meal using kitchen's stock items.
@@ -68,10 +68,19 @@ public interface DietUtilities {
      */
     List<Dish> proposeDish(List<Consumable> partsOfDish);
 
-
     /**
      * @return meal which contains closest nutrients values, but don't have user's intolerances.
      */
     Meal proposeSubstitute(Consumable foodToSubstitute);
 
+    FoodWrapper toFoodWrapper(String servingUnit, String servingSize, Consumable food);
+
+    /**
+     * Converts strings of date and time to LocalDateTime object.
+     *
+     * @param _date date in format day-month-year dd-mm-yyyy
+     * @param _time hour and minute in format hour-minute hh-mm
+     * @return object representing time and date
+     */
+    LocalDateTime toDateTime(String _date, String _time);
 }

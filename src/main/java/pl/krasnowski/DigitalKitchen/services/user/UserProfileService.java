@@ -1,6 +1,7 @@
 package pl.krasnowski.DigitalKitchen.services.user;
 
 import org.springframework.stereotype.Service;
+import pl.krasnowski.DigitalKitchen.model.DTO.UserDTO;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.Meal;
 import pl.krasnowski.DigitalKitchen.model.domain.food.Recipe;
 import pl.krasnowski.DigitalKitchen.model.domain.physicalActivity.PhysicalActivity;
@@ -35,15 +36,11 @@ public interface UserProfileService {
 
     void updateNotifications(NotificationSetup notificationSetup);
 
-
-    HistoryDay getCurrentHistoryDay();
-
     /**
      * @param date of day to return
-     * @return day with user's consumed food diary
+     * @return day with user's consumed food diary and physical activity
      */
     HistoryDay getHistoryDay(LocalDate date);
-
 
     /**
      * @return list of user dietDays diary

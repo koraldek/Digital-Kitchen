@@ -17,7 +17,6 @@ import java.util.*;
 @Slf4j
 public class PhysicalActivityServiceImpl implements PhysicalActivityService {
 
-
     @Autowired
     UserProfileService userProfileService;
 
@@ -26,23 +25,13 @@ public class PhysicalActivityServiceImpl implements PhysicalActivityService {
 
 
     @Override
-    public void addPhysicalActivity(PhysicalActivity pa) {
-        userProfileService.getCurrentHistoryDay().getDietDay().getWorkouts().add(pa);
-    }
-
-    @Override
     public void addPhysicalActivity(PhysicalActivity pa, LocalDate date) {
         userProfileService.getHistoryDay(date).addPhysicalActivity(pa);
     }
 
     @Override
-    public List<PhysicalActivity> getPhysicalActivityOfDay() {
-        return userProfileService.getCurrentHistoryDay().getDietDay().getWorkouts();
-    }
-
-    @Override
     public List<PhysicalActivity> getPhysicalActivityOfDay(LocalDate date) {
-        return userProfileService.getHistoryDay(date).getDietDay().getWorkouts();
+        return userProfileService.getHistoryDay(date).getFoodAndWorkoutDiary().getWorkout();
     }
 
     @Override
@@ -53,16 +42,16 @@ public class PhysicalActivityServiceImpl implements PhysicalActivityService {
 
         userProfileService.getDietHistory().forEach(
                 (historyDay) -> {
-                    LocalDate dayDate = historyDay.getDietDay().getDayDate().toLocalDateTime().toLocalDate();
+                    LocalDate dayDate = historyDay.getFoodAndWorkoutDiary().getDayDate().toLocalDateTime().toLocalDate();
                     if (dayDate.isAfter(start) && dayDate.isBefore(end))
-                        result.put(historyDay.getDietDay().getDayDate().toLocalDateTime().toLocalDate(), historyDay.getDietDay().getWorkouts());
+                        result.put(historyDay.getFoodAndWorkoutDiary().getDayDate().toLocalDateTime().toLocalDate(), historyDay.getFoodAndWorkoutDiary().getWorkout());
                 });
         return result;
     }
 
     @Override
     public void updatePhysicalActivity(PhysicalActivity oldActivity, PhysicalActivity newActivity, LocalDate date) {
-        userProfileService.getHistoryDay(date).getDietDay().getWorkouts().forEach(
+        userProfileService.getHistoryDay(date).getFoodAndWorkoutDiary().getWorkout().forEach(
                 tempPA -> {
                     if (tempPA.equals(oldActivity))
                         BeanUtils.copyProperties(newActivity, tempPA);
@@ -71,7 +60,7 @@ public class PhysicalActivityServiceImpl implements PhysicalActivityService {
 
     @Override
     public void removePhysicalActivity(PhysicalActivity pa, LocalDate date) {
-        userProfileService.getHistoryDay(date).getDietDay().getWorkouts().remove(pa);
+        userProfileService.getHistoryDay(date).getFoodAndWorkoutDiary().getWorkout().remove(pa);
     }
 
     @Override
@@ -84,24 +73,13 @@ public class PhysicalActivityServiceImpl implements PhysicalActivityService {
         pa.removePartner(partner);
     }
 
-
-    @Override
-    public int getBurnedCaloriesToday() {
-        return userProfileService.getCurrentHistoryDay().getDietDay().getKcalBurned();
-    }
-
-    @Override
-    public int getBurnedCalories(LocalDate date) {
-        return userProfileService.getHistoryDay(date).getDietDay().getKcalBurned();
-    }
-
     @Override
     public Map<LocalDate, List<PhysicalActivity>> getActivitiesOfType(PhysicalActivityType pat) {
         Map<LocalDate, List<PhysicalActivity>> result = new HashMap<>();
         userProfileService.getDietHistory().forEach(
                 (dietDay) -> {
-                    LocalDate dayDate = dietDay.getDietDay().getDayDate().toLocalDateTime().toLocalDate();
-                    dietDay.getDietDay().getWorkouts().forEach( // get workouts of each day
+                    LocalDate dayDate = dietDay.getFoodAndWorkoutDiary().getDayDate().toLocalDateTime().toLocalDate();
+                    dietDay.getFoodAndWorkoutDiary().getWorkout().forEach( // get workout of each day
                             (physicalActivity -> {
                                 if (physicalActivity.getActivityType().equals(pat)) {
                                     result.computeIfAbsent(dayDate, k -> result.put(k, new ArrayList<>()));
@@ -112,18 +90,17 @@ public class PhysicalActivityServiceImpl implements PhysicalActivityService {
         return result;
     }
 
-
     @Override
     public Map<LocalDate, List<PhysicalActivity>> getActivitiesOfType(PhysicalActivityType pat, LocalDate startDate, LocalDate endDate) {
         Map<LocalDate, List<PhysicalActivity>> result = new HashMap<>();
         LocalDate start = startDate.minusDays(1); // to include start day when using .isAfter()
-        LocalDate end = endDate.plusDays(1);
+        LocalDate end = endDate.plusDays(1); // to include start day when using .isBefore()
 
         userProfileService.getDietHistory().forEach(
                 (dietDay) -> {
-                    LocalDate dayDate = dietDay.getDietDay().getDayDate().toLocalDateTime().toLocalDate();
+                    LocalDate dayDate = dietDay.getFoodAndWorkoutDiary().getDayDate().toLocalDateTime().toLocalDate();
                     if (dayDate.isAfter(start) && dayDate.isBefore(end))
-                        dietDay.getDietDay().getWorkouts().forEach( // get workouts of each day
+                        dietDay.getFoodAndWorkoutDiary().getWorkout().forEach( // get workout of each day
                                 (physicalActivity -> {
                                     if (physicalActivity.getActivityType().equals(pat)) {
                                         result.computeIfAbsent(dayDate, k -> new ArrayList<>());

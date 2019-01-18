@@ -4,14 +4,16 @@ import org.springframework.stereotype.Service;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.Diet;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.DietDay;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.Meal;
+import pl.krasnowski.DigitalKitchen.model.domain.user.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
 
 @Service
 public interface DietManager {
-    String defaultDietSuffix = "'s personal diet";
+    String defaultDietSuffix = "'s personal diet"; //TODO: internationalize
 
     void addNewDiet(Diet diet);
 
@@ -28,10 +30,12 @@ public interface DietManager {
 
     Diet getCurrentDiet();
 
+    void addFoodToDiet(Meal food);
 
-    List<Diet> initializeDiets();
 
-    Diet initializeDiet();
+    List<Diet> initializeDiets(User user);
+
+    Diet initializeDiet(User user);
 
     Set<DietDay> initializeDietDays();
 
@@ -41,4 +45,10 @@ public interface DietManager {
 
     DietDay getCurrentDietDay();
 
+    DietDay getDietDay(LocalDate date);
+
+
+    int getKcalGained(LocalDate date);
+
+    int getBurnedKcal(LocalDate date);
 }

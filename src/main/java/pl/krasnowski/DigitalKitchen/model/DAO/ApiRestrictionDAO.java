@@ -10,5 +10,4 @@ import java.util.List;
 @Repository
 public interface ApiRestrictionDAO extends JpaRepository<ApiRestriction, Long> {
     List<ApiRestriction> findByDbName(String dbName);
-
 }

@@ -2,16 +2,12 @@ package pl.krasnowski.DigitalKitchen.model.domain.food;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import pl.krasnowski.DigitalKitchen.model.domain.kitchen.RequiredTool;
-import pl.krasnowski.DigitalKitchen.model.domain.user.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -47,6 +43,13 @@ public class Recipe extends Consumable implements Serializable {
     @Column(name = "description")
     private Map<Integer, String> instructions;
 
+    /**
+     * Array map serving in different units Map<unit_string,quantity>
+     */
+    @ElementCollection
+    @MapKeyColumn(name = "unit")
+    @Column(name = "quantity_serving")
+    private Map<Unit, Integer> servingSizes;
 
     /**
      * Stores names in Map<Language,names> names are comma separated. For example <English,egg,eggs>
@@ -56,18 +59,16 @@ public class Recipe extends Consumable implements Serializable {
     @Column(name = "name")
     private Map<String, String> names;
 
-    @Override
-    public String getName(String language) {
-        return names.get(language);
+
+    public void addName(String lang, String names) {
+        this.names.put(lang, names);
     }
 
     @Override
-    public String getName() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> usr = Optional.ofNullable((User) auth.getPrincipal());
-        String language = usr.<IllegalStateException>orElseThrow(() -> {
-            throw new IllegalStateException("Principal object is null.");
-        }).getLanguage();
-        return getName(language);
+    public String getName(String lang) {
+        if (!names.get(lang).isEmpty())
+            return names.get(lang);
+        else
+            return names.get("en");
     }
 }

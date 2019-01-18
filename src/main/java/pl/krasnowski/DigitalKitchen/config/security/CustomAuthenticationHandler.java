@@ -32,7 +32,7 @@ public class CustomAuthenticationHandler extends SimpleUrlAuthenticationSuccessH
         request.getSession().setMaxInactiveInterval(SessionConfiguration.SESSION_TIMEOUT);
         BeanUtils.copyProperties(loggedUser, user);
 
-        log.info("User {} logged on.", user.getUsername());
+        log.info("User {} logged on.", loggedUser.getUsername());
         handle(request, response, auth);
         super.clearAuthenticationAttributes(request);
     }

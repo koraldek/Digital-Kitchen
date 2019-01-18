@@ -19,6 +19,7 @@ import java.util.*;
 
 @Configuration
 public class FoodSystemConfig {
+
     private static final Logger log = LoggerFactory.getLogger(FoodSystemConfig.class);
     private static final String extdb_keys_path = "src/main/resources/extdb_keys.properties";
     private static final String met_values_path = "src/main/resources/met values.data";
@@ -93,28 +94,7 @@ public class FoodSystemConfig {
                 }
             }
         });
+
     }
 
-    @Bean
-    public static ArrayList<Nutrient> getNutrientsList() {
-        ArrayList<Nutrient> nutrients = new ArrayList<>();
-
-        try (Scanner scanner = new Scanner(new File(nutrients_path))) {
-            while (scanner.hasNext()) {
-                String[] line = scanner.nextLine().split("\t");
-                Nutrient n = new Nutrient();
-                n.addTag(DatabaseManager.NUTRITIONIX_DB_NAME, line[0]);
-                n.setUsda_tag(line[1]);
-                n.setName(line[2]);
-                n.setUnit(Unit.valueOf(line[3]));
-                if (line.length == 5)
-                    n.setNotes(line[4]);
-                nutrients.add(n);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            log.error("Could not read:" + nutrients_path);
-        }
-        return nutrients;
-    }
 }

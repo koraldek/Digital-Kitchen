@@ -1,5 +1,6 @@
 package pl.krasnowski.DigitalKitchen.model.domain.user;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.Diet;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.Meal;
@@ -9,44 +10,49 @@ import pl.krasnowski.DigitalKitchen.model.domain.physicalActivity.PhysicalActivi
 import pl.krasnowski.DigitalKitchen.model.domain.social.Message;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.*;
+import java.time.ZoneOffset;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-@Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"username"}),
-        @UniqueConstraint(columnNames = {"email"})
-})
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"username"}),
+                @UniqueConstraint(columnNames = {"email"})
+        })
 @Entity
 @Data
-public class User implements Serializable {
+@AllArgsConstructor
+public class User {
 
     /*
                   System general data
     **********************************************************************************************************
              */
-    private static final long serialVersionUID = -6684258566034441672L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id ")
+    @Column(name = "user_id ", nullable = false, insertable = false)
     private Long userID;
 
-    //  @NotEmpty(message = "*Please provide your username")
+    @NotEmpty(message = "*Please provide your username")
     private String username;
 
     /**
      * Visible username for all users along with "username" property.
      */
-    //   @NotEmpty(message = "*Please provide your visible name")
+    @NotEmpty(message = "*Please provide your visible name")
     private String visibleName;
 
     //  @Email(message = "*Please provide a valid Email")
-    //  @NotEmpty(message = "*Please provide an email")
+    @NotEmpty(message = "*Please provide an email")
     private String email;
 
     // @Length(min = 4, message = "*Your password must have at least 4 characters")
-    //   @NotEmpty(message = "*Please provide your password")
+    @NotEmpty(message = "*Please provide your password")
     private String password;
 
     private int active, nutritionix_id;
@@ -60,7 +66,7 @@ public class User implements Serializable {
 
     @JoinTable(
             name = "user_notification_setup",
-            joinColumns = {@JoinColumn(name = "userID")},
+            joinColumns = {@JoinColumn(name = "user_ID")},
             inverseJoinColumns = {@JoinColumn(name = "notification_setup_ID")}
     )
     @OneToMany(cascade = CascadeType.ALL)
@@ -69,7 +75,7 @@ public class User implements Serializable {
 
     @JoinTable(
             name = "user_api_restrictions",
-            joinColumns = {@JoinColumn(name = "userID")},
+            joinColumns = {@JoinColumn(name = "user_ID")},
             inverseJoinColumns = {@JoinColumn(name = "restriction_ID")}
     )
     @OneToMany(cascade = CascadeType.ALL)
@@ -77,10 +83,10 @@ public class User implements Serializable {
 
     @JoinTable(
             name = "user_roles",
-            joinColumns = {@JoinColumn(name = "userID")},
+            joinColumns = {@JoinColumn(name = "user_ID")},
             inverseJoinColumns = {@JoinColumn(name = "role_ID")}
     )
-    @ManyToMany
+    @OneToMany(cascade = CascadeType.MERGE)
     private Set<Role> roles;
 
 
@@ -104,7 +110,7 @@ public class User implements Serializable {
 
     @ElementCollection(targetClass = Intolerance.class)
     @JoinTable(name = "user_intolerances",
-            joinColumns = @JoinColumn(name = "userID"))
+            joinColumns = @JoinColumn(name = "user_ID"))
     @Enumerated(EnumType.ORDINAL)
     private Set<Intolerance> intolerances;
 
@@ -119,25 +125,24 @@ public class User implements Serializable {
 
     @JoinTable(
             name = "user_diets",
-            joinColumns = {@JoinColumn(name = "userID")},
+            joinColumns = {@JoinColumn(name = "user_ID")},
             inverseJoinColumns = {@JoinColumn(name = "diet_ID")}
     )
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Diet> diets;
 
-
-    @ElementCollection
-    @MapKeyColumn(name = "history_day_date")
+    @OneToMany(cascade = CascadeType.ALL)
     @Column(name = "user_history_days")
-    private Map<LocalDate, HistoryDay> historyDays;
+    @MapKeyTemporal(TemporalType.DATE)
+    private Map<Date, HistoryDay> historyDays;
 
 
     @JoinTable(
             name = "user_food_preferentions",
-            joinColumns = {@JoinColumn(name = "userID")},
+            joinColumns = {@JoinColumn(name = "user_ID")},
             inverseJoinColumns = {@JoinColumn(name = "preferention_ID")}
     )
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<FoodPreferention> foodPreferentions;
 
 
@@ -146,63 +151,50 @@ public class User implements Serializable {
  **********************************************************************************************************
      */
 
-
     String photo;
 
     @JoinTable(
             name = "user_friends",
-            joinColumns = {@JoinColumn(name = "userID")},
+            joinColumns = {@JoinColumn(name = "friend_owner_ID")},
             inverseJoinColumns = {@JoinColumn(name = "friend_ID")}
     )
-    @ManyToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<User> friends;
 
-    @JoinTable(name = "kitchen_id")
+    @JoinColumn(name = "kitchen_id")
     @ManyToOne(cascade = CascadeType.ALL)
     private Kitchen kitchen;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "message_ID")
+    @JoinColumn(name = "message_id")
     private List<Message> messages;
 
     @JoinTable(
             name = "user_saved_recipes",
-            joinColumns = {@JoinColumn(name = "userID")},
+            joinColumns = {@JoinColumn(name = "user_ID")},
             inverseJoinColumns = {@JoinColumn(name = "recipe_ID")}
     )
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Recipe> savedRecipes;
 
     @JoinTable(
             name = "user_saved_meals",
-            joinColumns = {@JoinColumn(name = "userID")},
+            joinColumns = {@JoinColumn(name = "user_ID")},
             inverseJoinColumns = {@JoinColumn(name = "meal_ID")}
     )
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Meal> savedMeals;
 
     @JoinTable(
             name = "user_saved_workouts",
-            joinColumns = {@JoinColumn(name = "userID")},
+            joinColumns = {@JoinColumn(name = "user_ID")},
             inverseJoinColumns = {@JoinColumn(name = "workout_id")}
     )
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<PhysicalActivity> savedWorkouts;
 
-
     public User() {
-        apiRestrictions = new HashSet<>();
-        diets = new ArrayList<>();
-        messages = new ArrayList<>();
-        friends = new ArrayList<>();
-        intolerances = new HashSet<>();
-        historyDays = new HashMap<>();
-        foodPreferentions = new HashSet<>();
-        savedMeals = new ArrayList<>();
-        savedRecipes = new ArrayList<>();
-        savedWorkouts = new ArrayList<>();
     }
-
 
     public void addMessage(Message msg) {
         messages.add(msg);
@@ -213,15 +205,18 @@ public class User implements Serializable {
     }
 
 
-    public void addHistoryDay(LocalDate date, HistoryDay hd) {
-        historyDays.put(date, hd);
+    public void addHistoryDay(LocalDate _date, HistoryDay _hd) {
+        Date date = Date.from(_date.atStartOfDay().toInstant(ZoneOffset.UTC));
+        historyDays.put(date, _hd);
     }
 
-    public void removeHistoryDay(LocalDate date) {
+    public void removeHistoryDay(LocalDate _date) {
+        Date date = Date.from(_date.atStartOfDay().toInstant(ZoneOffset.UTC));
         historyDays.remove(date);
     }
 
-    public HistoryDay getHistoryDay(LocalDate date) {
+    public HistoryDay getHistoryDay(LocalDate _date) {
+        Date date = Date.from(_date.atStartOfDay().toInstant(ZoneOffset.UTC));
         return historyDays.get(date);
     }
 
@@ -232,4 +227,6 @@ public class User implements Serializable {
     public void removeFoodPreferention(FoodPreferention fp) {
         foodPreferentions.remove(fp);
     }
+
+    //TODO: Add add/remove methods to sets/array lists
 }

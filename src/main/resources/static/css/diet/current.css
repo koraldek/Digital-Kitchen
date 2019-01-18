@@ -50,43 +50,20 @@ h1
     margin: 20px;
 }
 
-.jumpers
-{
-    text-align: center;
-}
-
-.jumpers img
-{
-    width: 100%;
-    height: auto;
-}
-
-.jumpers p
-{
-    margin-bottom: 30px;
-}
-
-.jumpers figcaption
-{
-    margin-top: 8px;
-}
-
-/*
-.navbar-nav li:hover>.dropdown-menu
-{
-	display: block;
-}
-*/
 
 .navbar
 {
     min-height: 57px;
+    background-color: #19b839;
 }
 
-.bg-jumpers
-{
-    background-color: #91a33b !important;
+table, th, td {
+    border: 1px solid #00606a;
+    text-align: center;
+    background-color: #e7e7e7;
+    color: #773b25;
 }
+
 
 
 

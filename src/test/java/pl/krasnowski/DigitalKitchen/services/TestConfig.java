@@ -48,7 +48,7 @@ public class TestConfig {
         adminUser.setUsername("Administration");
         adminUser.setPassword("123456");
         adminUser.setEmail("digital.kitchen.admin@gmail.com");
-        adminUser.setSex(Sex.male);
+        adminUser.setSex(Sex.MALE);
         return adminUser;
     }
 

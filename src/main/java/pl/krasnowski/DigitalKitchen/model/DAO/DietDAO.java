@@ -10,7 +10,7 @@ import pl.krasnowski.DigitalKitchen.model.domain.diet.Diet;
 public interface DietDAO extends JpaRepository<Diet, Long> {
 
 
-    @Query(value = "SELECT user_id FROM user_diets WHERE dietID = :dietID",
+    @Query(value = "SELECT user_id FROM user_diets WHERE diet_ID = :dietID",
             nativeQuery = true)
     Long getOwnerId(@Param("dietID") long dietID);
 }

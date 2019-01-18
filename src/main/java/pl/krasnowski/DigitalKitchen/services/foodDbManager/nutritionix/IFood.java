@@ -12,7 +12,9 @@ interface IFood {
 
     String getPhoto();
 
-    int getServingGramsWeight();
+    int getServingWeightGrams();
+
+    AltMeasure getPrimaryServingMeasure();
 
     List<AltMeasure> getAltMeasures();
 

@@ -1,31 +1,12 @@
 package pl.krasnowski.DigitalKitchen.services.foodDbManager.nutritionix;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @ToString
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-        "food_name",
-        "nix_brand_id",
-        "photo",
-        "brand_name",
-        "full_nutrients",
-        "serving_weight_grams",
-        "nix_item_id",
-        "serving_unit",
-        "brand_name_item_name",
-        "serving_qty",
-        "nf_calories",
-        "region",
-        "brand_type",
-        "locale"
-})
 class Branded implements IFood {
 
     @JsonProperty("food_name")
@@ -69,8 +50,13 @@ class Branded implements IFood {
     }
 
     @Override
-    public int getServingGramsWeight() {
+    public int getServingWeightGrams() {
         return servingWeightGrams;
+    }
+
+    @Override
+    public AltMeasure getPrimaryServingMeasure() {
+        return new AltMeasure(servingQty, servingUnit);
     }
 
     @Override

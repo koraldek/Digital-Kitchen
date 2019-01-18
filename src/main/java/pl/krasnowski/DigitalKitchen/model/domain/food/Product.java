@@ -2,12 +2,8 @@ package pl.krasnowski.DigitalKitchen.model.domain.food;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-import pl.krasnowski.DigitalKitchen.model.domain.user.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,25 +11,23 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
 
 @Entity
 @Data
-@ToString
 @EqualsAndHashCode(callSuper = false)
 @Component
 public class Product extends Consumable implements Serializable {
     private static final long serialVersionUID = -6112656696669254366L;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private Product parent;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Food base;
 
-
     /**
-     * Ingredients of product. Can be filled by rewriting information from its label.
+     * Ingredients of product. Filled by rewriting information from its label.
      */
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
@@ -53,8 +47,8 @@ public class Product extends Consumable implements Serializable {
      * name of shop where product was bought
      */
     private String provider;
-    private int price;
     private String barcode;
+    private int price;
 
     /**
      * Stores names in Map< Language,names> names are comma separated. For example < English,egg,eggs>
@@ -63,6 +57,10 @@ public class Product extends Consumable implements Serializable {
     @MapKeyColumn(name = "language")
     @Column(name = "name")
     private Map<String, String> names = new HashMap<>();
+
+    public void addName(String lang, String names) {
+        this.names.put(lang, names);
+    }
 
     @Override
     public String getName(String lang) {
@@ -73,17 +71,21 @@ public class Product extends Consumable implements Serializable {
         else if (!StringUtils.isEmpty(base.getName(lang)))
             return base.getName(lang);
         else
-            return base.getName("English");
+            return base.getName("en");
     }
 
-    @Override
-    public String getName() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> usr = Optional.ofNullable((User) auth.getPrincipal());
-        String language = usr.<IllegalStateException>orElseThrow(() -> {
-            throw new IllegalStateException("Principal object is null.");
-        }).getLanguage();
-        return getName(language);
+    public Set<NutrientWrapper> getNutrients() {
+        if (this.nutrients.isEmpty())
+            return base.getNutrients();
+        else
+            return this.nutrients;
+    }
+
+    public int getExpirationAfterOpen() {
+        if (this.expTimeAfterOpen == 0)
+            return base.expTimeAfterOpen;
+        else
+            return this.expTimeAfterOpen;
     }
 
 }

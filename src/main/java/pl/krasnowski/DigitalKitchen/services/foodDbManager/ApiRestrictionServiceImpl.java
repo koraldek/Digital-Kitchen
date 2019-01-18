@@ -28,7 +28,6 @@ public class ApiRestrictionServiceImpl implements ApiRestrictionService {
         return result;
     }
 
-
     @Override
     public Set<RestrictionPiece> getConcreteApiRestriction(String dbName) {
         ApiRestriction apiRestriction = uService.getCurrentUser().getApiRestrictions().stream()
@@ -48,7 +47,6 @@ public class ApiRestrictionServiceImpl implements ApiRestrictionService {
         return apiRestrictions;
     }
 
-
     @Override
     public void addRestrictionPiece(String dbName, int period, int max, Class dataType, int queryType) {
         for (RestrictionPiece rp : getConcreteApiRestriction(dbName)) {
@@ -63,7 +61,6 @@ public class ApiRestrictionServiceImpl implements ApiRestrictionService {
     @Override
     public RestrictionPiece getRestrictionPiece(String dbName, int period, Class dataType, int queryType) {
         for (RestrictionPiece rp : getConcreteApiRestriction(dbName)) {
-            System.out.println("rp:" + rp);
             if (rp.getPeriod() == period && rp.getDataType() == dataType && rp.getQueryType() == queryType) {
                 return rp;
             }
@@ -89,7 +86,6 @@ public class ApiRestrictionServiceImpl implements ApiRestrictionService {
                         }
                     });
         }
-        uService.updateUser(uService.getCurrentUser());
     }
 
 
