@@ -45,26 +45,26 @@ public class DigitalKitchenApplication {
             Food food = foodDAO.findByForeignID(DatabaseManager.NUTRITIONIX_DB_NAME, "552c5120f15d04ce1b8c5f00");
             if (food == null) {
                 food = new Food(
-                        new HashMap<>() {{
+                        new HashMap<String, String>() {{
                             put(DatabaseManager.NUTRITIONIX_DB_NAME, "552c5120f15d04ce1b8c5f00");
                         }},
                         "https://d1r9wva3zcpswd.cloudfront.net/552c5199251454a554f41f68.jpeg",
-                        new HashMap<>() {{
+                        new HashMap<String, String>() {{
                             put("en", "Healthy snack");
                         }},
-                        new HashSet<>() {{
+                        new HashSet<Origin>() {{
                             add(Origin.BRANDED);
                         }},
-                        new HashMap<>() {{
+                        new HashMap<Unit, Integer>() {{
                             put(Unit.G, 40);
                             put(Unit.PIECE, 12);
                         }},
-                        new HashSet<>() {{
+                        new HashSet<Intolerance>() {{
                             add(Intolerance.GLUTEN);
                             add(Intolerance.PEANUT);
                         }}
                 );
-                food.setNutrients(new HashSet<>() {{
+                food.setNutrients(new HashSet<NutrientWrapper>() {{
                     add(new NutrientWrapper(Nutrient.ENERGY, 4.5));
                     add(new NutrientWrapper(Nutrient.PROTEIN, 0.05));
                     add(new NutrientWrapper(Nutrient.CARBOHYDRATE, 0.65));
@@ -105,12 +105,12 @@ public class DigitalKitchenApplication {
                         "en",
                         UnitSetType.METRIC,
                         "+48555444333",
-                        new HashSet<>(),
-                        new HashSet<>() {{
+                        new HashSet<NotificationSetup>(),
+                        new HashSet<ApiRestriction>() {{
                             add(ApiRestrictionService.buildNutritionixApiRestriction());
                             add(ApiRestrictionService.buildEdemamApiRestriction());
                         }},
-                        new HashSet<>() {{
+                        new HashSet<Role>() {{
                             add(userRole);
                         }},
                         BodyType.MESOMORPH,
@@ -122,7 +122,7 @@ public class DigitalKitchenApplication {
                         weight,
                         Silhouette.NORMAL,
                         Silhouette.STRONGMAN,
-                        new HashSet<>() {{
+                        new HashSet<Intolerance>() {{
                             add(Intolerance.GLUTEN);
                             add(Intolerance.PEANUT);
                         }},
@@ -130,15 +130,15 @@ public class DigitalKitchenApplication {
                         new ArrayList<Diet>() {{
                             add(currentDiet);
                         }},
-                        new HashMap<>(),
-                        new HashSet<>(),
+                        new HashMap<java.util.Date, HistoryDay>(),
+                        new HashSet<FoodPreferention>(),
                         "no photo!",
                         new ArrayList<>(),
                         kitchen,
-                        new ArrayList<>(),
-                        new ArrayList<>(),
-                        new ArrayList<>(),
-                        new ArrayList<>()
+                        new ArrayList<pl.krasnowski.DigitalKitchen.model.domain.social.Message>(),
+                        new ArrayList<Recipe>(),
+                        new ArrayList<pl.krasnowski.DigitalKitchen.model.domain.diet.Meal>(),
+                        new ArrayList<pl.krasnowski.DigitalKitchen.model.domain.physicalActivity.PhysicalActivity>()
                 );
                 currentDiet.setAuthor(newUser);
 

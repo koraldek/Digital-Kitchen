@@ -3,6 +3,7 @@ package pl.krasnowski.DigitalKitchen.services.diet;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.Diet;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.DietType;
@@ -22,9 +23,13 @@ import java.util.List;
 @Slf4j
 public class DietUtilitiesImpl implements DietUtilities {
 
-
     @Autowired
-    UserService userService;
+    private final UserService userService;
+
+
+    public DietUtilitiesImpl(@Lazy UserService userService) {
+        this.userService = userService;
+    }
 
     /**
      * Implementation of Basal Metabolic Rate (BMR) calculator, Harris-Benedict's method

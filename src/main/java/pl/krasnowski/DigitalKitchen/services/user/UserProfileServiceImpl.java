@@ -3,6 +3,7 @@ package pl.krasnowski.DigitalKitchen.services.user;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,20 +36,28 @@ public class UserProfileServiceImpl implements UserProfileService { //TODO: Add 
     @NonNull
     private final UserDAO userDAO;
 
-    @Autowired
-    @NonNull
-    private final UserService uService;
 
     @Autowired
     @NonNull
-    DietManager dietManager;
+    private UserService uService;
 
+    @Autowired
+    @NonNull
+    private DietManager dietManager;
 
-    public UserProfileServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, UserDAO userDAO, UserService uService, DietManager dietManager) {
+    @Autowired
+    public void setDietManager(DietManager dietManager) {
+        this.dietManager = dietManager;
+    }
+
+    @Autowired
+    public void setuService(UserService uService) {
+        this.uService = uService;
+    }
+
+    public UserProfileServiceImpl(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder, UserDAO userDAO) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userDAO = userDAO;
-        this.uService = uService;
-        this.dietManager = dietManager;
     }
 
     @Override

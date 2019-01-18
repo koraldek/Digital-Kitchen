@@ -1,10 +1,10 @@
-<!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org ">
 <head>
+    <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2"/>
-    <link rel="stylesheet" type="text/css" href=".././static/css/main.css" th:href="@{/css/main.css}">
 
     <title>Edit your profile</title>
 </head>
@@ -32,9 +32,9 @@
     }
     #select-sex {
      text-align: center;
-   //     background-color: #46d260;
+        /*background-color: #46d260;*/
         width:300px;
-   //     margin-top: 10px;
+        /*margin-top: 10px;*/
      display: inline-block;
     }
 
@@ -44,10 +44,11 @@
         text-align: left;
 
     }
-
-
 </style>
-<body style="background-image: url(/img/background.jpg); min-height:100%;">
+
+<div th:replace="fragments/layout :: imports"></div>
+
+<body>
 <header th:replace="fragments/layout :: site-header"></header>
 
 

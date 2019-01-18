@@ -121,6 +121,8 @@ function renderServingUnits() {
         options = options + "<option style='text-align: center;' value=\"" + servings[i] + "\">" + servings[i] + "</option>";
     }
     document.getElementById('serving_unit').innerHTML = options;
+    document.getElementById("serving_size").value = Object.values(selectedFood.servingSizes)[0];
+
 }
 
 // Print chart

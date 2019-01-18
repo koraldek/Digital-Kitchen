@@ -6,6 +6,7 @@ import pl.krasnowski.DigitalKitchen.model.domain.physicalActivity.PhysicalActivi
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -49,6 +50,12 @@ public class DietDay {
     )
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PhysicalActivity> workout;
+
+
+    public DietDay() {
+        meals = new ArrayList<>();
+        workout = new ArrayList<>();
+    }
 
     public void addMeal(Meal meal) {
         meals.add(meal);

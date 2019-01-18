@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pl.krasnowski.DigitalKitchen.model.DAO.UserDAO;
 import pl.krasnowski.DigitalKitchen.model.domain.user.User;
 
@@ -20,6 +21,11 @@ public class DeveloperBeansConfig {
     @Qualifier("adminUser")
     User adminUser() {
         return userDAO.findByUsername("Admin");
+    }
+
+    @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     /**

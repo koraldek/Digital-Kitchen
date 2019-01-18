@@ -1,12 +1,13 @@
 package pl.krasnowski.DigitalKitchen.services.user;
 
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,6 @@ import pl.krasnowski.DigitalKitchen.services.SocialService;
 import pl.krasnowski.DigitalKitchen.services.diet.DietManager;
 import pl.krasnowski.DigitalKitchen.services.foodDbManager.ApiRestrictionServiceImpl;
 
-import javax.persistence.EntityManager;
 import java.util.*;
 
 
@@ -29,35 +29,29 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    @NonNull
-    private final UserDAO userDAO;
+    private UserDAO userDAO;
 
     @Autowired
-    @NonNull
-    private final RoleDAO roleDAO;
+    private RoleDAO roleDAO;
 
     @Autowired
-    @NonNull
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    @NonNull
-    private final DietManager dietService;
+    private DietManager dietService;
 
     @Autowired
-    @NonNull
-    private final SocialService socialService;
+    private SocialService socialService;
 
-    @Autowired
-    EntityManager em;
 
-    public UserServiceImpl(UserDAO userDAO, RoleDAO roleDAO, BCryptPasswordEncoder bCryptPasswordEncoder, @Lazy DietManager dietService, @Lazy SocialService socialService, @Lazy EntityManager em) {
+    public UserServiceImpl(@Lazy UserDAO userDAO, @Lazy RoleDAO roleDAO,
+                           @Lazy BCryptPasswordEncoder bCryptPasswordEncoder,
+                           @Lazy DietManager dietService, @Lazy SocialService socialService) {
         this.userDAO = userDAO;
         this.roleDAO = roleDAO;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.dietService = dietService;
         this.socialService = socialService;
-        this.em = em;
     }
 
     @Override
@@ -166,4 +160,12 @@ public class UserServiceImpl implements UserService {
         log.info("User:{} activated.", getCurrentUser().getUsername());
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userDAO.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException(username);
+        }
+        return new MyUserPrincipal(user);
+    }
 }

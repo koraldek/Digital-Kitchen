@@ -64,8 +64,9 @@ public class FoodSystemConfig {
                     nutritionixKeys.put("x-app-key", line.split("=")[1]);
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
             log.error("Could not read " + extdb_keys_path);
+            nutritionixKeys.put("x-app-id", System.getenv("x-app-id"));
+            nutritionixKeys.put("x-app-key", System.getenv("x-app-key"));
         }
         if (nutritionixKeys.isEmpty())
             log.error("Can't read API keys from file:" + extdb_keys_path);

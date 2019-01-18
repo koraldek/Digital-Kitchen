@@ -1,5 +1,6 @@
 package pl.krasnowski.DigitalKitchen.services.user;
 
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import pl.krasnowski.DigitalKitchen.model.DTO.UserDTO;
 import pl.krasnowski.DigitalKitchen.model.domain.user.Role;
@@ -11,7 +12,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Service
-public interface UserService extends Serializable {
+public interface UserService extends UserDetailsService {
 
     /**
      * Initializes User object with some predefined data.

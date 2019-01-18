@@ -2,14 +2,13 @@ package pl.krasnowski.DigitalKitchen.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import pl.krasnowski.DigitalKitchen.model.DAO.FoodDAO;
-import pl.krasnowski.DigitalKitchen.model.DAO.UserDAO;
 import pl.krasnowski.DigitalKitchen.model.DTO.LoggedMealDTO;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.Diet;
 import pl.krasnowski.DigitalKitchen.model.domain.diet.DietDay;
@@ -17,12 +16,9 @@ import pl.krasnowski.DigitalKitchen.model.domain.food.Food;
 import pl.krasnowski.DigitalKitchen.services.diet.DietManager;
 import pl.krasnowski.DigitalKitchen.services.diet.DietUtilities;
 import pl.krasnowski.DigitalKitchen.services.diet.FoodLogger;
-import pl.krasnowski.DigitalKitchen.services.diet.MealScheduler;
 import pl.krasnowski.DigitalKitchen.services.foodDbManager.DatabaseManager;
 import pl.krasnowski.DigitalKitchen.services.user.UserProfileService;
 import pl.krasnowski.DigitalKitchen.services.user.UserService;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/diets")
@@ -30,31 +26,33 @@ import java.time.LocalDate;
 class DietController {
 
     @Autowired
-    private DietManager dietManager;
+    private final DietManager dietManager;
 
     @Autowired
-    private DietUtilities dietUtilities;
+    private final DietUtilities dietUtilities;
 
     @Autowired
-    private UserService uService;
+    private final UserService uService;
 
     @Autowired
-    private FoodLogger foodLogger;
+    private final FoodLogger foodLogger;
 
     @Autowired
-    private MealScheduler mealScheduler;
+    private final UserProfileService userProfileService;
 
     @Autowired
-    private UserDAO userDAO;
+    private final DatabaseManager dbManager;
 
-    @Autowired
-    private UserProfileService userProfileService;
-
-    @Autowired
-    private FoodDAO foodDAO;
-
-    @Autowired
-    private DatabaseManager dbManager;
+    public DietController(@Lazy DietManager dietManager, @Lazy DietUtilities dietUtilities, @Lazy UserService uService,
+                          @Lazy FoodLogger foodLogger, @Lazy UserProfileService userProfileService,
+                          @Lazy DatabaseManager dbManager) {
+        this.dietManager = dietManager;
+        this.dietUtilities = dietUtilities;
+        this.uService = uService;
+        this.foodLogger = foodLogger;
+        this.userProfileService = userProfileService;
+        this.dbManager = dbManager;
+    }
 
 
     @GetMapping(value = "/")
@@ -87,7 +85,12 @@ class DietController {
         mav.addObject("bmi", dietUtilities.calculateBMI(
                 uService.getCurrentUser().getWeight(), uService.getCurrentUser().getHeight()));
         mav.addObject("dietDays", dietManager.getCurrentDiet().getDietDays());
-        mav.addObject("diary", userProfileService.getHistoryDay(LocalDate.now()).getFoodAndWorkoutDiary());
+
+        DietDay tempDD = new DietDay();
+        userProfileService.getDietHistory().forEach(historyDay -> // Aggregate meals from diary
+                historyDay.getFoodAndWorkoutDiary().getMeals().forEach(
+                        tempDD::addMeal));
+        mav.addObject("diary", tempDD);
         mav.setViewName("diet/current");
         return mav;
     }
